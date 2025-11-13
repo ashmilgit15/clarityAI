@@ -336,39 +336,53 @@ st.markdown("""
     }
     
     /* ==========================================
-       AUTH SCREEN
+       AUTH SCREEN - PERFECTLY CENTERED
     ========================================== */
     .auth-container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
-        padding: 2rem;
-        background: #343541;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        min-height: 100vh !important;
+        width: 100vw !important;
+        padding: 2rem !important;
+        background: #343541 !important;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        z-index: 10000 !important;
     }
     
     .auth-card {
-        max-width: 400px;
+        max-width: 420px;
         width: 100%;
         text-align: center;
+        background: rgba(32, 33, 35, 0.8);
+        backdrop-filter: blur(20px);
+        padding: 3rem 2rem;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     }
     
     .auth-icon {
-        font-size: 4rem;
+        font-size: 4.5rem;
         margin-bottom: 1.5rem;
+        filter: drop-shadow(0 4px 12px rgba(102, 126, 234, 0.3));
     }
     
     .auth-title {
-        font-size: 2rem;
-        font-weight: 600;
+        font-size: 2.25rem;
+        font-weight: 700;
         color: #ececf1;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.75rem;
+        letter-spacing: -0.02em;
     }
     
     .auth-subtitle {
-        font-size: 1rem;
+        font-size: 1.0625rem;
         color: #8e8ea0;
-        margin-bottom: 2rem;
+        margin-bottom: 2.5rem;
+        line-height: 1.6;
     }
     
     /* ==========================================
@@ -538,7 +552,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Mobile Menu Script
+# Mobile Menu Script - Enhanced with Better Initialization
 st.markdown("""
 <div class="mobile-menu-btn" id="mobileMenuBtn" onclick="toggleSidebar()">
     <svg viewBox="0 0 24 24">
@@ -550,46 +564,84 @@ st.markdown("""
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
 
 <script>
+// Toggle sidebar function
 function toggleSidebar() {
+    console.log('Toggle sidebar called');
     const sidebar = document.querySelector('[data-testid="stSidebar"]');
     const overlay = document.getElementById('sidebarOverlay');
+    
+    if (!sidebar || !overlay) {
+        console.error('Sidebar or overlay not found');
+        return;
+    }
+    
     const isVisible = sidebar.getAttribute('data-visible') === 'true';
     
     if (isVisible) {
         sidebar.setAttribute('data-visible', 'false');
         overlay.classList.remove('active');
+        console.log('Sidebar closed');
     } else {
         sidebar.setAttribute('data-visible', 'true');
         overlay.classList.add('active');
+        console.log('Sidebar opened');
     }
 }
 
-// Initialize
-if (window.innerWidth <= 768) {
+// Initialize sidebar state
+function initSidebar() {
     const sidebar = document.querySelector('[data-testid="stSidebar"]');
-    if (sidebar) sidebar.setAttribute('data-visible', 'false');
+    
+    if (!sidebar) {
+        setTimeout(initSidebar, 100);
+        return;
+    }
+    
+    if (window.innerWidth <= 768) {
+        sidebar.setAttribute('data-visible', 'false');
+        console.log('Mobile: Sidebar initialized as hidden');
+    }
 }
 
-// Handle resize
+// Run initialization when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSidebar);
+} else {
+    initSidebar();
+}
+
+// Also run after a short delay (for Streamlit's dynamic loading)
+setTimeout(initSidebar, 500);
+
+// Handle window resize
 window.addEventListener('resize', () => {
+    const sidebar = document.querySelector('[data-testid="stSidebar"]');
+    const overlay = document.getElementById('sidebarOverlay');
+    
     if (window.innerWidth > 768) {
-        const sidebar = document.querySelector('[data-testid="stSidebar"]');
-        const overlay = document.getElementById('sidebarOverlay');
         if (sidebar) sidebar.removeAttribute('data-visible');
         if (overlay) overlay.classList.remove('active');
+    } else {
+        if (sidebar && !sidebar.hasAttribute('data-visible')) {
+            sidebar.setAttribute('data-visible', 'false');
+        }
     }
 });
 
-// Close sidebar when clicking chat messages
+// Close sidebar when clicking outside
 document.addEventListener('click', (e) => {
     if (window.innerWidth <= 768) {
         const sidebar = document.querySelector('[data-testid="stSidebar"]');
         const menuBtn = document.getElementById('mobileMenuBtn');
         const overlay = document.getElementById('sidebarOverlay');
         
-        if (!sidebar.contains(e.target) && !menuBtn.contains(e.target) && sidebar.getAttribute('data-visible') === 'true') {
-            sidebar.setAttribute('data-visible', 'false');
-            overlay.classList.remove('active');
+        if (sidebar && menuBtn && sidebar.getAttribute('data-visible') === 'true') {
+            const clickedInside = sidebar.contains(e.target) || menuBtn.contains(e.target);
+            
+            if (!clickedInside) {
+                sidebar.setAttribute('data-visible', 'false');
+                if (overlay) overlay.classList.remove('active');
+            }
         }
     }
 });
