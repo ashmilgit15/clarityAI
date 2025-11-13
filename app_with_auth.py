@@ -144,11 +144,20 @@ st.markdown("""
         backdrop-filter: blur(20px) !important;
         border-right: 1px solid rgba(102, 126, 234, 0.2) !important;
         box-shadow: 4px 0 24px rgba(102, 126, 234, 0.1) !important;
+        min-width: 280px !important;
+        max-width: 350px !important;
     }
     
     [data-testid="stSidebar"] > div:first-child {
         background: transparent !important;
         padding: 1.25rem !important;
+        width: 100% !important;
+    }
+    
+    /* Ensure sidebar content doesn't overflow */
+    [data-testid="stSidebar"] * {
+        max-width: 100%;
+        overflow-wrap: break-word;
     }
     
     /* Gorgeous User Profile Card with Gradient */
@@ -243,6 +252,11 @@ st.markdown("""
         backdrop-filter: blur(10px) !important;
         position: relative;
         overflow: hidden;
+        white-space: normal !important;
+        word-wrap: break-word !important;
+        text-align: left !important;
+        line-height: 1.4 !important;
+        width: 100% !important;
     }
     
     [data-testid="stSidebar"] .stButton button::before {
