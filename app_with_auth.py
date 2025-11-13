@@ -21,9 +21,7 @@ st.set_page_config(
 # Initialize Firebase (only once)
 if not firebase_admin._apps:
     try:
-        # Check if running on Streamlit Cloud (secrets has firebase_credentials section)
         if "firebase_credentials" in st.secrets:
-            # Load from Streamlit Cloud secrets
             cred_dict = {
                 "type": st.secrets["firebase_credentials"]["type"],
                 "project_id": st.secrets["firebase_credentials"]["project_id"],
@@ -40,7 +38,6 @@ if not firebase_admin._apps:
                 cred_dict["universe_domain"] = st.secrets["firebase_credentials"]["universe_domain"]
             cred = credentials.Certificate(cred_dict)
         else:
-            # Load from local file (development)
             cred_path = st.secrets.get("firebase_credentials_path", "firebase-credentials.json")
             cred = credentials.Certificate(cred_path)
         
@@ -53,44 +50,24 @@ if not firebase_admin._apps:
 else:
     db = firestore.client()
 
-# Stylish Mobile-First Design with Beautiful Gradients
+# Professional ChatGPT-Style UI
 st.markdown("""
-<script src="https://cdn.tailwindcss.com"></script>
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
     
     * { 
-        font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         box-sizing: border-box;
     }
     
-    /* Ensure emojis render properly */
-    .emoji, [data-testid="stMarkdownContainer"] {
-        font-family: 'Poppins', 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif;
-    }
-    
+    /* Hide Streamlit elements */
     #MainMenu, footer, header {visibility: hidden !important;}
     .stDeployButton {display: none !important;}
+    [data-testid="stToolbar"] {display: none !important;}
     
-    :root {
-        --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-        --gradient-purple: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        --gradient-pink: linear-gradient(135deg, #f857a6 0%, #ff5858 100%);
-        --background: #0a0a1e;
-        --surface: rgba(255, 255, 255, 0.05);
-        --surface-hover: rgba(255, 255, 255, 0.1);
-        --text-primary: #ffffff;
-        --text-secondary: rgba(255, 255, 255, 0.7);
-        --border: rgba(255, 255, 255, 0.1);
-        --glow: rgba(102, 126, 234, 0.5);
-    }
-    
-    /* Global Styles */
+    /* Global Reset */
     .stApp { 
-        background: var(--background) !important;
+        background: #343541 !important;
     }
     
     .block-container { 
@@ -98,409 +75,356 @@ st.markdown("""
         max-width: 100% !important;
     }
     
-    /* Mobile-First: Base mobile styles */
-    @media (max-width: 768px) {
-        .stApp {
-            padding-bottom: 80px !important;
-        }
-    }
-    
     /* ==========================================
-       AUTH SCREEN - MOBILE RESPONSIVE
+       SIDEBAR - ChatGPT Style
     ========================================== */
-    .auth-container {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        padding: 1.5rem;
-        background: radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.1) 0%, transparent 60%);
-    }
-    
-    @media (max-width: 480px) {
-        .auth-container {
-            padding: 1rem;
-        }
-    }
-    
-    @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    
-    @keyframes float {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-8px); }
-    }
-    
-    /* ==========================================
-       PROFESSIONAL SIDEBAR
-    ========================================== */
-    
-    /* Stylish Sidebar with Glassmorphism */
     [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, rgba(10, 10, 30, 0.95) 0%, rgba(15, 15, 35, 0.98) 100%) !important;
-        backdrop-filter: blur(20px) !important;
-        border-right: 1px solid rgba(102, 126, 234, 0.2) !important;
-        box-shadow: 4px 0 24px rgba(102, 126, 234, 0.1) !important;
-        min-width: 280px !important;
-        max-width: 350px !important;
+        background: #202123 !important;
+        border-right: none !important;
+        padding: 0 !important;
+        min-width: 260px !important;
+        max-width: 260px !important;
     }
     
     [data-testid="stSidebar"] > div:first-child {
         background: transparent !important;
-        padding: 1.25rem !important;
-        width: 100% !important;
+        padding: 0.5rem !important;
     }
     
-    /* Ensure sidebar content doesn't overflow */
-    [data-testid="stSidebar"] * {
-        max-width: 100%;
-        overflow-wrap: break-word;
-    }
-    
-    /* Gorgeous User Profile Card with Gradient */
-    .user-profile-card {
-        background: var(--gradient-1);
-        padding: 1.25rem;
-        border-radius: 16px;
+    /* User Profile Section */
+    .user-profile {
+        padding: 0.75rem;
+        margin: 0.5rem;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
         display: flex;
         align-items: center;
-        gap: 1rem;
-        margin-bottom: 1.5rem;
-        box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
-        overflow: hidden;
+        gap: 0.75rem;
+        transition: all 0.2s ease;
     }
     
-    .user-profile-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 100%);
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
-    
-    .user-profile-card:hover::before {
-        opacity: 1;
-    }
-    
-    .user-profile-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 48px rgba(102, 126, 234, 0.4);
+    .user-profile:hover {
+        background: rgba(255, 255, 255, 0.08);
     }
     
     .user-avatar {
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        border-radius: 6px;
         object-fit: cover;
-        border: 3px solid rgba(255, 255, 255, 0.9);
         flex-shrink: 0;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        position: relative;
-        z-index: 1;
     }
     
     .user-info {
         flex: 1;
         min-width: 0;
-        position: relative;
-        z-index: 1;
+        overflow: hidden;
     }
     
     .user-name {
-        font-size: 1.0625rem;
-        font-weight: 700;
-        color: white;
-        margin: 0 0 0.25rem 0;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-        letter-spacing: 0.01em;
-    }
-    
-    .user-email {
-        font-size: 0.8125rem;
-        color: rgba(255, 255, 255, 0.9);
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #ececf1;
         margin: 0;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     }
     
-    /* Stylish Bold Gradient Buttons */
-    [data-testid="stSidebar"] .stButton button {
-        background: var(--surface) !important;
-        color: white !important;
-        border: 1px solid rgba(102, 126, 234, 0.3) !important;
-        border-radius: 12px !important;
-        padding: 0.875rem 1.25rem !important;
-        font-size: 0.9375rem !important;
-        font-weight: 700 !important;
-        letter-spacing: 0.03em !important;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-        min-height: 48px !important;
-        backdrop-filter: blur(10px) !important;
-        position: relative;
+    .user-email {
+        font-size: 0.75rem;
+        color: #8e8ea0;
+        margin: 0;
+        white-space: nowrap;
         overflow: hidden;
-        white-space: normal !important;
-        word-wrap: break-word !important;
+        text-overflow: ellipsis;
+    }
+    
+    /* Sidebar Buttons */
+    [data-testid="stSidebar"] .stButton button {
+        background: transparent !important;
+        color: #ececf1 !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        border-radius: 6px !important;
+        padding: 0.625rem 0.75rem !important;
+        font-size: 0.875rem !important;
+        font-weight: 500 !important;
+        transition: all 0.15s ease !important;
         text-align: left !important;
-        line-height: 1.4 !important;
         width: 100% !important;
-    }
-    
-    [data-testid="stSidebar"] .stButton button::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-        transition: left 0.5s ease;
-    }
-    
-    [data-testid="stSidebar"] .stButton button:hover::before {
-        left: 100%;
+        min-height: 42px !important;
+        margin: 0.25rem 0 !important;
     }
     
     [data-testid="stSidebar"] .stButton button:hover {
-        background: var(--surface-hover) !important;
-        border-color: rgba(102, 126, 234, 0.6) !important;
-        transform: translateY(-2px) scale(1.02);
-        box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+        background: rgba(255, 255, 255, 0.1) !important;
+        border-color: rgba(255, 255, 255, 0.3) !important;
     }
     
-    /* New Chat Button - Beautiful Bold Gradient */
+    /* New Chat Button */
     [data-testid="stSidebar"] .stButton:first-of-type button {
-        background: var(--gradient-1) !important;
-        border: none !important;
-        color: white !important;
-        font-weight: 800 !important;
-        letter-spacing: 0.05em !important;
-        box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
-        text-transform: uppercase;
-        font-size: 0.875rem !important;
+        background: transparent !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        font-weight: 600 !important;
     }
     
     [data-testid="stSidebar"] .stButton:first-of-type button:hover {
-        box-shadow: 0 8px 32px rgba(102, 126, 234, 0.6);
-        transform: translateY(-3px) scale(1.03);
+        background: rgba(255, 255, 255, 0.1) !important;
     }
     
-    /* Sign Out Button - Bold Pink Gradient */
+    /* Chat History */
+    [data-testid="stSidebar"] h3 {
+        font-size: 0.75rem !important;
+        font-weight: 600 !important;
+        color: #8e8ea0 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.05em !important;
+        margin: 1.5rem 0.75rem 0.5rem 0.75rem !important;
+        padding: 0 !important;
+    }
+    
+    [data-testid="stSidebar"] hr {
+        border-color: rgba(255, 255, 255, 0.1) !important;
+        margin: 0.75rem 0.5rem !important;
+    }
+    
+    /* Sign Out Button */
     [data-testid="stSidebar"] .stButton:last-of-type button {
-        background: transparent !important;
-        border-color: rgba(248, 87, 166, 0.4) !important;
-        color: #f857a6 !important;
-        font-weight: 700 !important;
+        color: #ef4444 !important;
+        border-color: rgba(239, 68, 68, 0.3) !important;
     }
     
     [data-testid="stSidebar"] .stButton:last-of-type button:hover {
-        background: var(--gradient-pink) !important;
-        border-color: transparent !important;
-        color: white !important;
-        box-shadow: 0 8px 24px rgba(248, 87, 166, 0.4);
-        font-weight: 800 !important;
-    }
-    
-    /* Emoji Support Everywhere */
-    button, .stButton, .stMarkdown, p, span, div {
-        font-family: 'Poppins', 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif !important;
-    }
-    
-    /* Sidebar Elements */
-    [data-testid="stSidebar"] hr {
-        border-color: var(--border) !important;
-        margin: 1rem 0 !important;
-    }
-    
-    /* Sidebar Captions - Bold & Stylish */
-    [data-testid="stSidebar"] .element-container p {
-        font-weight: 600 !important;
-        color: var(--text-secondary) !important;
-        font-size: 0.8125rem !important;
-    }
-    
-    [data-testid="stSidebar"] h3, [data-testid="stSidebar"] h2 {
-        font-size: 0.8125rem !important;
-        font-weight: 800 !important;
-        color: white !important;
-        text-transform: uppercase !important;
-        letter-spacing: 0.1em !important;
-        margin: 1.25rem 0 1rem 0 !important;
-        background: var(--gradient-1);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
+        background: rgba(239, 68, 68, 0.1) !important;
+        border-color: rgba(239, 68, 68, 0.5) !important;
     }
     
     /* ==========================================
-       CHAT INTERFACE - MOBILE OPTIMIZED
+       CHAT INTERFACE - ChatGPT Style
     ========================================== */
-    .stChatMessage {
-        background: transparent !important;
-        padding: 1rem 0.5rem !important;
+    
+    /* Main Chat Container */
+    .main {
+        background: #343541;
     }
     
-    /* User Messages - Beautiful Gradient */
+    /* Chat Messages */
+    [data-testid="stChatMessage"] {
+        background: transparent !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    
+    /* User Messages */
+    [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {
+        background: #343541 !important;
+    }
+    
     [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) [data-testid="stChatMessageContent"] {
-        background: var(--gradient-1) !important;
-        color: white !important;
-        border-radius: 20px 20px 4px 20px !important;
-        padding: 1rem 1.25rem !important;
-        max-width: 85% !important;
-        font-size: 0.9375rem !important;
-        line-height: 1.6 !important;
-        word-wrap: break-word !important;
-        box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
-        position: relative;
-        animation: slideInRight 0.3s ease-out;
-    }
-    
-    @keyframes slideInRight {
-        from {
-            opacity: 0;
-            transform: translateX(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
-    }
-    
-    /* Assistant Messages - Glassmorphism */
-    [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarAssistant"]) [data-testid="stChatMessageContent"] {
-        background: rgba(255, 255, 255, 0.05) !important;
-        backdrop-filter: blur(10px) !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        border-radius: 20px 20px 20px 4px !important;
-        padding: 1rem 1.25rem !important;
-        max-width: 85% !important;
-        font-size: 0.9375rem !important;
-        line-height: 1.6 !important;
-        color: white !important;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-        animation: slideInLeft 0.3s ease-out;
-    }
-    
-    @keyframes slideInLeft {
-        from {
-            opacity: 0;
-            transform: translateX(-20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
-    }
-    
-    /* Stylish Chat Input with Gradient Border */
-    .stChatInputContainer {
-        background: rgba(255, 255, 255, 0.05) !important;
-        backdrop-filter: blur(10px) !important;
-        border: 2px solid transparent !important;
-        background-image: linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05)), 
-                          var(--gradient-1) !important;
-        background-origin: border-box !important;
-        background-clip: padding-box, border-box !important;
-        border-radius: 28px !important;
-        padding: 0.75rem 1.5rem !important;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-    }
-    
-    .stChatInputContainer:focus-within {
-        background-image: linear-gradient(rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.08)), 
-                          var(--gradient-1) !important;
-        box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3) !important;
-        transform: translateY(-2px);
-    }
-    
-    .stChatInput input {
         background: transparent !important;
-        color: white !important;
-        border: none !important;
+        padding: 1.5rem 1rem !important;
+        max-width: 48rem !important;
+        margin: 0 auto !important;
+        color: #ececf1 !important;
         font-size: 1rem !important;
-        min-height: 48px !important;
-        font-weight: 400;
+        line-height: 1.75 !important;
+        border: none !important;
+        border-radius: 0 !important;
     }
     
-    .stChatInput input::placeholder {
-        color: rgba(255, 255, 255, 0.5) !important;
+    /* Assistant Messages */
+    [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarAssistant"]) {
+        background: #444654 !important;
+    }
+    
+    [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarAssistant"]) [data-testid="stChatMessageContent"] {
+        background: transparent !important;
+        padding: 1.5rem 1rem !important;
+        max-width: 48rem !important;
+        margin: 0 auto !important;
+        color: #ececf1 !important;
+        font-size: 1rem !important;
+        line-height: 1.75 !important;
+        border: none !important;
+        border-radius: 0 !important;
+    }
+    
+    /* Message Content Styling */
+    [data-testid="stChatMessageContent"] p {
+        margin: 0.5rem 0 !important;
+        color: inherit !important;
+    }
+    
+    /* Chat Input Container */
+    [data-testid="stChatInputContainer"] {
+        background: transparent !important;
+        border: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        position: relative !important;
+    }
+    
+    .stChatInput {
+        max-width: 48rem !important;
+        margin: 0 auto 1.5rem auto !important;
+        padding: 0 1rem !important;
+    }
+    
+    .stChatInput textarea {
+        background: #40414f !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: 12px !important;
+        padding: 0.75rem 3rem 0.75rem 1rem !important;
+        font-size: 1rem !important;
+        color: #ececf1 !important;
+        min-height: 52px !important;
+        max-height: 200px !important;
+        resize: none !important;
+        box-shadow: 0 0 0 0 transparent !important;
+    }
+    
+    .stChatInput textarea:focus {
+        border-color: rgba(255, 255, 255, 0.2) !important;
+        outline: none !important;
+        box-shadow: 0 0 0 0 transparent !important;
+    }
+    
+    .stChatInput textarea::placeholder {
+        color: #8e8ea0 !important;
+    }
+    
+    /* Send Button */
+    .stChatInput button {
+        background: transparent !important;
+        border: none !important;
+        color: #8e8ea0 !important;
+        position: absolute !important;
+        right: 0.5rem !important;
+        bottom: 0.5rem !important;
+    }
+    
+    .stChatInput button:hover {
+        color: #ececf1 !important;
     }
     
     /* ==========================================
-       MOBILE - CHATGPT STYLE PERFECT UI
+       WELCOME SCREEN
     ========================================== */
+    .welcome-screen {
+        max-width: 48rem;
+        margin: 0 auto;
+        padding: 4rem 1rem;
+        text-align: center;
+    }
     
-    /* Custom Hamburger Menu Button for Mobile */
-    .mobile-menu-btn {
-        display: none;
-        position: fixed;
-        top: 1rem;
-        left: 1rem;
-        z-index: 9999;
-        width: 40px;
-        height: 40px;
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 8px;
-        cursor: pointer;
+    .welcome-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+    }
+    
+    .welcome-title {
+        font-size: 2rem;
+        font-weight: 600;
+        color: #ececf1;
+        margin-bottom: 0.5rem;
+    }
+    
+    .welcome-subtitle {
+        font-size: 1.125rem;
+        color: #8e8ea0;
+    }
+    
+    /* ==========================================
+       AUTH SCREEN
+    ========================================== */
+    .auth-container {
+        display: flex;
         align-items: center;
         justify-content: center;
-        transition: all 0.3s ease;
+        min-height: 100vh;
+        padding: 2rem;
+        background: #343541;
     }
     
-    .mobile-menu-btn:active {
-        transform: scale(0.95);
-        background: rgba(255, 255, 255, 0.15);
+    .auth-card {
+        max-width: 400px;
+        width: 100%;
+        text-align: center;
     }
     
-    .mobile-menu-btn svg {
-        width: 24px;
-        height: 24px;
-        stroke: white;
-        stroke-width: 2;
-        fill: none;
+    .auth-icon {
+        font-size: 4rem;
+        margin-bottom: 1.5rem;
     }
+    
+    .auth-title {
+        font-size: 2rem;
+        font-weight: 600;
+        color: #ececf1;
+        margin-bottom: 0.5rem;
+    }
+    
+    .auth-subtitle {
+        font-size: 1rem;
+        color: #8e8ea0;
+        margin-bottom: 2rem;
+    }
+    
+    /* ==========================================
+       MOBILE RESPONSIVE
+    ========================================== */
     
     @media (max-width: 768px) {
-        /* Show hamburger menu on mobile */
-        .mobile-menu-btn {
-            display: flex !important;
-        }
-        
-        /* Hide sidebar by default on mobile */
+        /* Sidebar */
         [data-testid="stSidebar"] {
             position: fixed !important;
             left: -100% !important;
             top: 0 !important;
             height: 100vh !important;
             width: 80vw !important;
-            max-width: 300px !important;
+            max-width: 280px !important;
             z-index: 9998 !important;
             transition: left 0.3s ease !important;
-            box-shadow: 2px 0 16px rgba(0, 0, 0, 0.3) !important;
+            box-shadow: 2px 0 16px rgba(0, 0, 0, 0.5) !important;
         }
         
-        /* Show sidebar when toggled */
-        [data-testid="stSidebar"][data-collapsed="false"] {
+        [data-testid="stSidebar"][data-visible="true"] {
             left: 0 !important;
         }
         
-        /* Overlay when sidebar is open */
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            position: fixed;
+            top: 0.75rem;
+            left: 0.75rem;
+            z-index: 9999;
+            width: 40px;
+            height: 40px;
+            background: #202123;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        
+        .mobile-menu-btn:active {
+            transform: scale(0.95);
+            background: #2c2d30;
+        }
+        
+        .mobile-menu-btn svg {
+            width: 20px;
+            height: 20px;
+            stroke: #ececf1;
+            stroke-width: 2;
+            fill: none;
+        }
+        
+        /* Overlay */
         .sidebar-overlay {
             display: none;
             position: fixed;
@@ -517,141 +441,90 @@ st.markdown("""
             display: block;
         }
         
-        /* Main content - ChatGPT style */
+        /* Main Content */
         .main {
-            padding: 0 !important;
-            margin-left: 0 !important;
+            padding-top: 3.5rem !important;
         }
         
         .main .block-container {
-            padding: 4rem 0 0 0 !important;
-            max-width: 100% !important;
-        }
-        
-        /* ChatGPT-style messages */
-        [data-testid="stChatMessage"] {
-            padding: 1.5rem 1rem !important;
-            margin: 0 !important;
-            border-radius: 0 !important;
-            max-width: 100% !important;
-        }
-        
-        /* User messages - light background */
-        [data-testid="stChatMessage"][data-testid*="user"] {
-            background: #f7f7f8 !important;
-        }
-        
-        /* Assistant messages - white background */
-        [data-testid="stChatMessage"][data-testid*="assistant"] {
-            background: white !important;
-        }
-        
-        /* Message content */
-        [data-testid="stChatMessageContent"] {
-            max-width: 100% !important;
             padding: 0 !important;
-            margin: 0 auto !important;
-            font-size: 1rem !important;
-            line-height: 1.6 !important;
-            color: #000 !important;
         }
         
-        [data-testid="stChatMessageContent"] p {
-            margin: 0.5rem 0 !important;
-            color: #000 !important;
+        /* Chat Messages */
+        [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) [data-testid="stChatMessageContent"],
+        [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarAssistant"]) [data-testid="stChatMessageContent"] {
+            padding: 1.25rem 1rem !important;
         }
         
-        /* Chat input - ChatGPT style fixed bottom */
-        [data-testid="stChatInputContainer"] {
-            position: fixed !important;
-            bottom: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            z-index: 1000 !important;
-            margin: 0 !important;
-            padding: 1rem !important;
-            background: white !important;
-            border-top: 1px solid #e5e5e5 !important;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1) !important;
-        }
-        
+        /* Chat Input */
         .stChatInput {
-            max-width: 100% !important;
-            margin: 0 auto !important;
-        }
-        
-        .stChatInput textarea {
-            background: white !important;
-            border: 1px solid #d1d1d1 !important;
-            border-radius: 12px !important;
-            padding: 0.875rem 3rem 0.875rem 1rem !important;
-            font-size: 16px !important;
-            color: #000 !important;
-            min-height: 24px !important;
-            max-height: 200px !important;
-            resize: none !important;
-        }
-        
-        .stChatInput textarea:focus {
-            outline: none !important;
-            border-color: #10a37f !important;
-            box-shadow: 0 0 0 1px #10a37f !important;
-        }
-        
-        /* Chat container padding */
-        [data-testid="stVerticalBlock"] {
-            padding-bottom: 100px !important;
-        }
-        
-        /* Profile card mobile */
-        .user-profile-card {
-            padding: 1rem !important;
+            padding: 0 0.75rem !important;
             margin-bottom: 1rem !important;
         }
         
-        .user-avatar {
-            width: 40px !important;
-            height: 40px !important;
+        .stChatInput textarea {
+            font-size: 16px !important;
         }
         
-        .user-name {
-            font-size: 0.9375rem !important;
+        /* Welcome Screen */
+        .welcome-screen {
+            padding: 3rem 1rem !important;
         }
         
-        .user-email {
-            font-size: 0.75rem !important;
+        .welcome-title {
+            font-size: 1.75rem !important;
         }
         
-        /* Sidebar buttons */
-        [data-testid="stSidebar"] .stButton button {
-            padding: 0.875rem 1rem !important;
-            min-height: 48px !important;
-            font-size: 0.9375rem !important;
+        .welcome-subtitle {
+            font-size: 1rem !important;
         }
     }
     
     @media (max-width: 480px) {
         .mobile-menu-btn {
-            top: 0.75rem;
-            left: 0.75rem;
+            top: 0.5rem;
+            left: 0.5rem;
         }
         
         [data-testid="stSidebar"] {
             width: 85vw !important;
         }
         
-        [data-testid="stChatMessage"] {
-            padding: 1.25rem 0.875rem !important;
+        .welcome-screen {
+            padding: 2rem 0.75rem !important;
         }
         
-        [data-testid="stChatInputContainer"] {
-            padding: 0.875rem !important;
+        .welcome-icon, .auth-icon {
+            font-size: 3rem !important;
         }
+        
+        .welcome-title, .auth-title {
+            font-size: 1.5rem !important;
+        }
+    }
+    
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.3);
     }
 </style>
 """, unsafe_allow_html=True)
 
-# Add hamburger menu button for mobile
+# Mobile Menu Script
 st.markdown("""
 <div class="mobile-menu-btn" id="mobileMenuBtn" onclick="toggleSidebar()">
     <svg viewBox="0 0 24 24">
@@ -666,32 +539,44 @@ st.markdown("""
 function toggleSidebar() {
     const sidebar = document.querySelector('[data-testid="stSidebar"]');
     const overlay = document.getElementById('sidebarOverlay');
-    const isOpen = sidebar.getAttribute('data-collapsed') === 'false';
+    const isVisible = sidebar.getAttribute('data-visible') === 'true';
     
-    if (isOpen) {
-        sidebar.setAttribute('data-collapsed', 'true');
+    if (isVisible) {
+        sidebar.setAttribute('data-visible', 'false');
         overlay.classList.remove('active');
     } else {
-        sidebar.setAttribute('data-collapsed', 'false');
+        sidebar.setAttribute('data-visible', 'true');
         overlay.classList.add('active');
     }
 }
 
-// Initialize sidebar as closed on mobile
+// Initialize
 if (window.innerWidth <= 768) {
     const sidebar = document.querySelector('[data-testid="stSidebar"]');
-    if (sidebar) {
-        sidebar.setAttribute('data-collapsed', 'true');
-    }
+    if (sidebar) sidebar.setAttribute('data-visible', 'false');
 }
 
-// Close sidebar on window resize
+// Handle resize
 window.addEventListener('resize', () => {
     if (window.innerWidth > 768) {
         const sidebar = document.querySelector('[data-testid="stSidebar"]');
         const overlay = document.getElementById('sidebarOverlay');
-        if (sidebar) sidebar.removeAttribute('data-collapsed');
+        if (sidebar) sidebar.removeAttribute('data-visible');
         if (overlay) overlay.classList.remove('active');
+    }
+});
+
+// Close sidebar when clicking chat messages
+document.addEventListener('click', (e) => {
+    if (window.innerWidth <= 768) {
+        const sidebar = document.querySelector('[data-testid="stSidebar"]');
+        const menuBtn = document.getElementById('mobileMenuBtn');
+        const overlay = document.getElementById('sidebarOverlay');
+        
+        if (!sidebar.contains(e.target) && !menuBtn.contains(e.target) && sidebar.getAttribute('data-visible') === 'true') {
+            sidebar.setAttribute('data-visible', 'false');
+            overlay.classList.remove('active');
+        }
     }
 });
 </script>
@@ -751,7 +636,7 @@ def update_chat_in_firestore(user_id, chat_id, messages):
         'message_count': len(messages)
     })
 
-# Initialize session state with browser localStorage for persistent login
+# Initialize session state
 if "user" not in st.session_state:
     st.session_state.user = None
 
@@ -769,30 +654,22 @@ if "client" not in st.session_state:
         st.error("⚠️ Groq API Key Missing")
         st.stop()
 
-# Real Google OAuth Sign-in
+# Authentication Screen
 def show_auth_screen():
-    """Display authentication screen with real Google OAuth"""
-    # Add spacer to push content to center vertically
-    st.markdown("<br><br><br>", unsafe_allow_html=True)
-    
-    # Centered auth card and form
-    col_left, col_center, col_right = st.columns([1, 2, 1])
-    
-    with col_center:
-        st.markdown("""
-        <div style="text-align: center; margin-bottom: 2rem;">
-            <div style="font-size: 4rem; margin-bottom: 1rem; animation: float 3s ease-in-out infinite;">🧘</div>
-            <h1 style="font-size: 2.5rem; font-weight: 800; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.5rem;">
-                Welcome to Clarity
-            </h1>
-            <p style="color: rgba(255,255,255,0.6); font-size: 1.1rem; margin-bottom: 2rem;">
-                Your AI-powered wellness companion
-            </p>
+    """Display authentication screen"""
+    st.markdown("""
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-icon">🧘</div>
+            <h1 class="auth-title">Welcome to Clarity</h1>
+            <p class="auth-subtitle">Your AI-powered wellness companion</p>
         </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("<h3 style='text-align: center; color: white; margin-bottom: 1.5rem;'>Sign in with Google</h3>", unsafe_allow_html=True)
-        
+    </div>
+    """, unsafe_allow_html=True)
+    
+    col1, col2, col3 = st.columns([1, 2, 1])
+    
+    with col2:
         # Initialize OAuth component
         oauth2 = OAuth2Component(
             st.secrets["oauth"]["client_id"],
@@ -802,7 +679,7 @@ def show_auth_screen():
             "https://oauth2.googleapis.com/token"
         )
         
-        # Create OAuth button (no prompt = automatic sign-in if already authenticated)
+        # Create OAuth button
         result = oauth2.authorize_button(
             name="Sign in with Google",
             redirect_uri=st.secrets["oauth"]["redirect_uri"],
@@ -815,14 +692,11 @@ def show_auth_screen():
         
         # Handle OAuth callback
         if result and "token" in result:
-            # Get user info from Google
             headers = {"Authorization": f"Bearer {result['token']['access_token']}"}
             user_info = requests.get("https://www.googleapis.com/oauth2/v1/userinfo", headers=headers).json()
             
-            # Create user ID from Google ID
             user_id = user_info.get("id", hashlib.md5(user_info["email"].encode()).hexdigest())
             
-            # Store user info in session
             st.session_state.user = {
                 'id': user_id,
                 'email': user_info.get("email", ""),
@@ -830,7 +704,6 @@ def show_auth_screen():
                 'photo_url': user_info.get("picture", f"https://ui-avatars.com/api/?name={user_info.get('name', 'User')}&background=667eea&color=fff")
             }
             
-            # Create user in Firestore
             create_user_in_firestore(
                 user_id,
                 st.session_state.user['email'],
@@ -839,12 +712,8 @@ def show_auth_screen():
             )
             
             st.rerun()
-        
-        st.markdown("<br>", unsafe_allow_html=True)
-        st.markdown("<p style='text-align: center; color: rgba(255,255,255,0.5); font-size: 0.9rem;'>🔒 Secure authentication with Google</p>", unsafe_allow_html=True)
-        st.markdown("<p style='text-align: center; color: rgba(255,255,255,0.5); font-size: 0.9rem;'>📱 Your chats are saved and synced across devices</p>", unsafe_allow_html=True)
 
-# Main App (after authentication)
+# Main App
 if st.session_state.user is None:
     show_auth_screen()
 else:
@@ -854,8 +723,8 @@ else:
     with st.sidebar:
         # User Profile
         st.markdown(f"""
-        <div class="user-profile-card">
-            <img src="{user['photo_url']}" class="user-avatar" alt="User Avatar">
+        <div class="user-profile">
+            <img src="{user['photo_url']}" class="user-avatar" alt="Avatar">
             <div class="user-info">
                 <p class="user-name">{user['name']}</p>
                 <p class="user-email">{user['email']}</p>
@@ -864,22 +733,20 @@ else:
         """, unsafe_allow_html=True)
         
         # New Chat Button
-        if st.button("🔄 New Conversation", use_container_width=True):
-            # Save current chat if it has messages
+        if st.button("➕ New chat", use_container_width=True):
             if st.session_state.messages and st.session_state.current_chat_id:
                 update_chat_in_firestore(user['id'], st.session_state.current_chat_id, st.session_state.messages)
             elif st.session_state.messages:
                 st.session_state.current_chat_id = save_chat_to_firestore(user['id'], st.session_state.messages)
             
-            # Clear for new chat
             st.session_state.messages = []
             st.session_state.current_chat_id = None
             st.rerun()
         
         st.divider()
         
-        # Load chat history
-        st.subheader("💬 Chat History")
+        # Chat History
+        st.subheader("Recent Chats")
         user_chats = load_user_chats(user['id'])
         
         if user_chats:
@@ -889,13 +756,12 @@ else:
                     st.session_state.current_chat_id = chat['id']
                     st.rerun()
         else:
-            st.caption("No chat history yet")
+            st.caption("No previous chats")
         
         st.divider()
         
-        # Sign out
-        if st.button("🚪 Sign Out", use_container_width=True):
-            # Save current chat before signing out
+        # Sign Out
+        if st.button("🚪 Sign out", use_container_width=True):
             if st.session_state.messages:
                 if st.session_state.current_chat_id:
                     update_chat_in_firestore(user['id'], st.session_state.current_chat_id, st.session_state.messages)
@@ -908,17 +774,12 @@ else:
             st.rerun()
     
     # Main Chat Area
-    st.markdown('<div style="max-width: 900px; margin: 0 auto; padding: 2rem;">', unsafe_allow_html=True)
-    
     if len(st.session_state.messages) == 0:
         st.markdown(f"""
-        <div style="text-align: center; padding: 4rem 2rem;">
-            <h1 style="font-size: 3rem; color: white; margin-bottom: 1rem;">
-                Hello, {user['name']}! 👋
-            </h1>
-            <p style="font-size: 1.2rem; color: #a0a0b0;">
-                How can I support your wellness journey today?
-            </p>
+        <div class="welcome-screen">
+            <div class="welcome-icon">🧘</div>
+            <h1 class="welcome-title">Hello, {user['name']}!</h1>
+            <p class="welcome-subtitle">How can I support your wellness journey today?</p>
         </div>
         """, unsafe_allow_html=True)
     else:
@@ -927,7 +788,7 @@ else:
                 st.markdown(message["content"])
     
     # Chat Input
-    if prompt := st.chat_input("Share your thoughts..."):
+    if prompt := st.chat_input("Send a message..."):
         st.session_state.messages.append({"role": "user", "content": prompt})
         
         with st.chat_message("user"):
@@ -951,7 +812,6 @@ else:
                     st.markdown(assistant_response)
                     st.session_state.messages.append({"role": "assistant", "content": assistant_response})
                     
-                    # Auto-save to Firestore
                     if st.session_state.current_chat_id:
                         update_chat_in_firestore(user['id'], st.session_state.current_chat_id, st.session_state.messages)
                     else:
@@ -959,5 +819,3 @@ else:
                     
                 except Exception as e:
                     st.error(f"Error: {str(e)}")
-    
-    st.markdown('</div>', unsafe_allow_html=True)

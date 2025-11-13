@@ -1,0 +1,365 @@
+/* Professional Mobile-First Responsive Design for Clarity AI */
+
+/* ========================================
+   SIDEBAR - CLEAN & PROFESSIONAL
+======================================== */
+
+/* Sidebar Container */
+[data-testid="stSidebar"] {
+    background: var(--surface) !important;
+    border-right: 1px solid var(--border);
+}
+
+[data-testid="stSidebar"] > div:first-child {
+    background: var(--surface) !important;
+    padding: 1rem !important;
+}
+
+/* Professional User Profile Card */
+.user-profile-card {
+    background: var(--surface-light);
+    padding: 1.25rem;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--border);
+    transition: all 0.2s ease;
+}
+
+.user-profile-card:hover {
+    border-color: var(--primary-light);
+    background: rgba(99, 102, 241, 0.05);
+}
+
+.user-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--primary);
+    flex-shrink: 0;
+}
+
+.user-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.user-name {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 0.25rem 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.user-email {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Sidebar Buttons - Professional Style */
+[data-testid="stSidebar"] .stButton button {
+    background: transparent !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 8px !important;
+    padding: 0.75rem 1rem !important;
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease !important;
+    min-height: 44px !important; /* Touch-friendly */
+}
+
+[data-testid="stSidebar"] .stButton button:hover {
+    background: var(--surface-light) !important;
+    border-color: var(--primary) !important;
+    transform: translateY(-1px);
+}
+
+[data-testid="stSidebar"] .stButton button:active {
+    transform: translateY(0);
+}
+
+/* New Chat Button - Primary Action */
+[data-testid="stSidebar"] .stButton:first-of-type button {
+    background: var(--primary) !important;
+    border-color: var(--primary) !important;
+    color: white !important;
+    font-weight: 600 !important;
+}
+
+[data-testid="stSidebar"] .stButton:first-of-type button:hover {
+    background: var(--primary-dark) !important;
+    border-color: var(--primary-dark) !important;
+}
+
+/* Sign Out Button - Danger */
+[data-testid="stSidebar"] .stButton:last-of-type button {
+    border-color: rgba(239, 68, 68, 0.3) !important;
+    color: var(--danger) !important;
+}
+
+[data-testid="stSidebar"] .stButton:last-of-type button:hover {
+    background: rgba(239, 68, 68, 0.1) !important;
+    border-color: var(--danger) !important;
+}
+
+/* Sidebar Dividers */
+[data-testid="stSidebar"] hr {
+    border-color: var(--border) !important;
+    margin: 1rem 0 !important;
+}
+
+/* Sidebar Subheaders */
+[data-testid="stSidebar"] h3 {
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+    color: var(--text-secondary) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    margin: 1rem 0 0.75rem 0 !important;
+}
+
+/* Chat History Items */
+[data-testid="stSidebar"] .stButton button[kind="secondary"] {
+    text-align: left !important;
+    justify-content: flex-start !important;
+    padding: 0.625rem 0.875rem !important;
+    font-size: 0.8125rem !important;
+    line-height: 1.4 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+/* Caption Text */
+[data-testid="stSidebar"] .stCaption {
+    color: var(--text-secondary) !important;
+    font-size: 0.8125rem !important;
+    text-align: center;
+    padding: 1rem 0;
+}
+
+/* ========================================
+   CHAT INTERFACE - MOBILE OPTIMIZED
+======================================== */
+
+/* Chat Messages */
+.stChatMessage {
+    background: transparent !important;
+    padding: 1rem 0.5rem !important;
+}
+
+/* User Messages */
+[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) [data-testid="stChatMessageContent"] {
+    background: var(--primary) !important;
+    color: white !important;
+    border-radius: 16px 16px 4px 16px !important;
+    padding: 0.875rem 1rem !important;
+    max-width: 85% !important;
+    font-size: 0.9375rem !important;
+    line-height: 1.5 !important;
+    word-wrap: break-word !important;
+}
+
+/* Assistant Messages */
+[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarAssistant"]) [data-testid="stChatMessageContent"] {
+    background: var(--surface) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 16px 16px 16px 4px !important;
+    padding: 0.875rem 1rem !important;
+    max-width: 85% !important;
+    font-size: 0.9375rem !important;
+    line-height: 1.6 !important;
+    color: var(--text-primary) !important;
+}
+
+/* Chat Input - Touch Optimized */
+.stChatInputContainer {
+    background: var(--surface) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 24px !important;
+    padding: 0.625rem 1.25rem !important;
+    transition: all 0.2s ease !important;
+}
+
+.stChatInputContainer:focus-within {
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1) !important;
+}
+
+.stChatInput input {
+    background: transparent !important;
+    color: var(--text-primary) !important;
+    border: none !important;
+    font-size: 1rem !important;
+    min-height: 44px !important; /* Touch-friendly */
+}
+
+.stChatInput input::placeholder {
+    color: var(--text-secondary) !important;
+}
+
+/* ========================================
+   MOBILE RESPONSIVE (< 768px)
+======================================== */
+
+@media (max-width: 768px) {
+    /* Sidebar becomes collapsible */
+    [data-testid="stSidebar"] > div:first-child {
+        padding: 0.75rem !important;
+    }
+    
+    .user-profile-card {
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .user-name {
+        font-size: 0.875rem;
+    }
+    
+    .user-email {
+        font-size: 0.6875rem;
+    }
+    
+    /* Buttons optimized for touch */
+    [data-testid="stSidebar"] .stButton button {
+        padding: 0.875rem 1rem !important;
+        font-size: 0.9375rem !important;
+        min-height: 48px !important;
+    }
+    
+    /* Chat messages take more width on mobile */
+    [data-testid="stChatMessage"] [data-testid="stChatMessageContent"] {
+        max-width: 90% !important;
+        font-size: 1rem !important;
+    }
+    
+    /* Larger chat input for mobile */
+    .stChatInput input {
+        font-size: 16px !important; /* Prevents zoom on iOS */
+        min-height: 48px !important;
+    }
+    
+    /* Main content padding */
+    .stApp > div > div {
+        padding: 1rem !important;
+    }
+}
+
+/* ========================================
+   SMALL MOBILE (< 480px)
+======================================== */
+
+@media (max-width: 480px) {
+    .user-profile-card {
+        flex-direction: column;
+        text-align: center;
+        padding: 0.875rem;
+    }
+    
+    .user-info {
+        text-align: center;
+    }
+    
+    /* Sidebar subheaders */
+    [data-testid="stSidebar"] h3 {
+        font-size: 0.6875rem !important;
+    }
+    
+    /* Chat history items */
+    [data-testid="stSidebar"] .stButton button {
+        font-size: 0.875rem !important;
+        padding: 0.75rem 0.875rem !important;
+    }
+}
+
+/* ========================================
+   DESKTOP ENHANCEMENTS (> 768px)
+======================================== */
+
+@media (min-width: 769px) {
+    [data-testid="stSidebar"] > div:first-child {
+        padding: 1.5rem !important;
+    }
+    
+    .user-profile-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+    }
+}
+
+/* ========================================
+   AUTH SCREEN - RESPONSIVE
+======================================== */
+
+.auth-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 1.5rem;
+}
+
+@media (max-width: 480px) {
+    .auth-container {
+        padding: 1rem;
+    }
+    
+    .auth-title {
+        font-size: 2rem !important;
+    }
+    
+    .auth-subtitle {
+        font-size: 0.9375rem !important;
+    }
+}
+
+/* ========================================
+   ACCESSIBILITY
+======================================== */
+
+/* Focus states */
+button:focus-visible, 
+input:focus-visible {
+    outline: 2px solid var(--primary) !important;
+    outline-offset: 2px;
+}
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* High contrast for readability */
+@media (prefers-contrast: high) {
+    :root {
+        --text-secondary: #d4d4d8;
+        --border: rgba(255, 255, 255, 0.2);
+    }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
