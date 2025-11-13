@@ -372,10 +372,72 @@ st.markdown("""
     }
     
     /* ==========================================
+       MOBILE MENU - Always Define
+    ========================================== */
+    
+    /* Mobile Menu Button - Hidden by default */
+    .mobile-menu-btn {
+        display: none;
+        position: fixed;
+        top: 0.75rem;
+        left: 0.75rem;
+        z-index: 9999;
+        width: 44px;
+        height: 44px;
+        background: #202123;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+    
+    .mobile-menu-btn:active {
+        transform: scale(0.92);
+        background: #2c2d30;
+    }
+    
+    .mobile-menu-btn svg {
+        width: 22px;
+        height: 22px;
+        stroke: #ececf1;
+        stroke-width: 2.5;
+        stroke-linecap: round;
+        fill: none;
+    }
+    
+    /* Sidebar Overlay */
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 9997;
+        backdrop-filter: blur(4px);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .sidebar-overlay.active {
+        display: block;
+        opacity: 1;
+    }
+    
+    /* ==========================================
        MOBILE RESPONSIVE
     ========================================== */
     
     @media (max-width: 768px) {
+        /* Show Mobile Menu Button */
+        .mobile-menu-btn {
+            display: flex !important;
+        }
+        
         /* Sidebar */
         [data-testid="stSidebar"] {
             position: fixed !important;
@@ -383,62 +445,14 @@ st.markdown("""
             top: 0 !important;
             height: 100vh !important;
             width: 80vw !important;
-            max-width: 280px !important;
+            max-width: 300px !important;
             z-index: 9998 !important;
-            transition: left 0.3s ease !important;
-            box-shadow: 2px 0 16px rgba(0, 0, 0, 0.5) !important;
+            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            box-shadow: 4px 0 24px rgba(0, 0, 0, 0.6) !important;
         }
         
         [data-testid="stSidebar"][data-visible="true"] {
             left: 0 !important;
-        }
-        
-        /* Mobile Menu Button */
-        .mobile-menu-btn {
-            position: fixed;
-            top: 0.75rem;
-            left: 0.75rem;
-            z-index: 9999;
-            width: 40px;
-            height: 40px;
-            background: #202123;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-        }
-        
-        .mobile-menu-btn:active {
-            transform: scale(0.95);
-            background: #2c2d30;
-        }
-        
-        .mobile-menu-btn svg {
-            width: 20px;
-            height: 20px;
-            stroke: #ececf1;
-            stroke-width: 2;
-            fill: none;
-        }
-        
-        /* Overlay */
-        .sidebar-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 9997;
-            backdrop-filter: blur(4px);
-        }
-        
-        .sidebar-overlay.active {
-            display: block;
         }
         
         /* Main Content */
