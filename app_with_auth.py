@@ -441,46 +441,112 @@ st.markdown("""
     }
     
     /* ==========================================
-       MOBILE RESPONSIVE
+       MOBILE RESPONSIVE - CLEAN & ORGANIZED
     ========================================== */
+    
     @media (max-width: 768px) {
-        [data-testid="stSidebar"] > div:first-child {
-            padding: 0.75rem !important;
+        /* Sidebar becomes collapsible (Streamlit native) */
+        [data-testid="stSidebar"] {
+            min-width: 260px !important;
+            max-width: 280px !important;
         }
         
+        [data-testid="stSidebar"][aria-expanded="false"] {
+            margin-left: -280px;
+        }
+        
+        [data-testid="stSidebar"] > div:first-child {
+            padding: 1rem !important;
+        }
+        
+        /* Main content takes full width */
+        .main .block-container {
+            padding: 0.5rem 1rem !important;
+            max-width: 100% !important;
+        }
+        
+        /* Profile card compact */
         .user-profile-card {
-            padding: 1rem;
+            padding: 0.875rem 1rem;
             margin-bottom: 1rem;
         }
         
         .user-avatar {
-            width: 40px;
-            height: 40px;
+            width: 42px;
+            height: 42px;
         }
         
+        .user-name {
+            font-size: 0.9375rem !important;
+        }
+        
+        .user-email {
+            font-size: 0.75rem !important;
+        }
+        
+        /* Buttons touch-optimized */
         [data-testid="stSidebar"] .stButton button {
-            padding: 0.875rem 1rem !important;
-            min-height: 48px !important;
+            padding: 1rem 1.25rem !important;
+            min-height: 52px !important;
+            font-size: 1rem !important;
         }
         
+        /* Chat messages take more width */
         [data-testid="stChatMessage"] [data-testid="stChatMessageContent"] {
-            max-width: 90% !important;
+            max-width: 92% !important;
             font-size: 1rem !important;
+            padding: 1rem 1.25rem !important;
+        }
+        
+        /* Chat input fixed at bottom */
+        [data-testid="stChatInputContainer"] {
+            position: fixed !important;
+            bottom: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            z-index: 999 !important;
+            margin: 0 !important;
+            padding: 1rem !important;
+            background: rgba(10, 10, 30, 0.98) !important;
+            backdrop-filter: blur(20px) !important;
+            border-radius: 0 !important;
+            border: none !important;
+            border-top: 1px solid rgba(102, 126, 234, 0.3) !important;
+            box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.3) !important;
         }
         
         .stChatInput input {
             font-size: 16px !important;
             min-height: 48px !important;
         }
+        
+        /* Add padding to bottom of chat for fixed input */
+        .main {
+            padding-bottom: 100px !important;
+        }
+        
+        /* Chat container */
+        [data-testid="stVerticalBlock"] {
+            padding-bottom: 120px !important;
+        }
     }
     
     @media (max-width: 480px) {
+        [data-testid="stSidebar"] {
+            min-width: 240px !important;
+            max-width: 260px !important;
+        }
+        
         .user-name {
             font-size: 0.875rem !important;
         }
         
         .user-email {
             font-size: 0.6875rem !important;
+        }
+        
+        [data-testid="stSidebar"] .stButton button {
+            font-size: 0.9375rem !important;
         }
     }
 </style>
