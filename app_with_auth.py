@@ -21,10 +21,23 @@ st.set_page_config(
 # Initialize Firebase (only once)
 if not firebase_admin._apps:
     try:
-        # Check if running on Streamlit Cloud (secrets has firebase_credentials dict)
-        if "firebase_credentials" in st.secrets and isinstance(st.secrets["firebase_credentials"], dict):
+        # Check if running on Streamlit Cloud (secrets has firebase_credentials section)
+        if "firebase_credentials" in st.secrets:
             # Load from Streamlit Cloud secrets
-            cred_dict = dict(st.secrets["firebase_credentials"])
+            cred_dict = {
+                "type": st.secrets["firebase_credentials"]["type"],
+                "project_id": st.secrets["firebase_credentials"]["project_id"],
+                "private_key_id": st.secrets["firebase_credentials"]["private_key_id"],
+                "private_key": st.secrets["firebase_credentials"]["private_key"],
+                "client_email": st.secrets["firebase_credentials"]["client_email"],
+                "client_id": st.secrets["firebase_credentials"]["client_id"],
+                "auth_uri": st.secrets["firebase_credentials"]["auth_uri"],
+                "token_uri": st.secrets["firebase_credentials"]["token_uri"],
+                "auth_provider_x509_cert_url": st.secrets["firebase_credentials"]["auth_provider_x509_cert_url"],
+                "client_x509_cert_url": st.secrets["firebase_credentials"]["client_x509_cert_url"],
+            }
+            if "universe_domain" in st.secrets["firebase_credentials"]:
+                cred_dict["universe_domain"] = st.secrets["firebase_credentials"]["universe_domain"]
             cred = credentials.Certificate(cred_dict)
         else:
             # Load from local file (development)
