@@ -57,11 +57,17 @@ else:
 st.markdown("""
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap');
     
     * { 
         font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
         box-sizing: border-box;
+    }
+    
+    /* Ensure emojis render properly */
+    .emoji, [data-testid="stMarkdownContainer"] {
+        font-family: 'Poppins', 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif;
     }
     
     #MainMenu, footer, header {visibility: hidden !important;}
@@ -201,14 +207,15 @@ st.markdown("""
     }
     
     .user-name {
-        font-size: 1rem;
-        font-weight: 600;
+        font-size: 1.0625rem;
+        font-weight: 700;
         color: white;
         margin: 0 0 0.25rem 0;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        letter-spacing: 0.01em;
     }
     
     .user-email {
@@ -221,7 +228,7 @@ st.markdown("""
         text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     }
     
-    /* Stylish Gradient Buttons */
+    /* Stylish Bold Gradient Buttons */
     [data-testid="stSidebar"] .stButton button {
         background: var(--surface) !important;
         color: white !important;
@@ -229,7 +236,8 @@ st.markdown("""
         border-radius: 12px !important;
         padding: 0.875rem 1.25rem !important;
         font-size: 0.9375rem !important;
-        font-weight: 500 !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.03em !important;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
         min-height: 48px !important;
         backdrop-filter: blur(10px) !important;
@@ -259,13 +267,16 @@ st.markdown("""
         box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
     }
     
-    /* New Chat Button - Beautiful Gradient */
+    /* New Chat Button - Beautiful Bold Gradient */
     [data-testid="stSidebar"] .stButton:first-of-type button {
         background: var(--gradient-1) !important;
         border: none !important;
         color: white !important;
-        font-weight: 600 !important;
+        font-weight: 800 !important;
+        letter-spacing: 0.05em !important;
         box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
+        text-transform: uppercase;
+        font-size: 0.875rem !important;
     }
     
     [data-testid="stSidebar"] .stButton:first-of-type button:hover {
@@ -273,11 +284,12 @@ st.markdown("""
         transform: translateY(-3px) scale(1.03);
     }
     
-    /* Sign Out Button - Pink Gradient */
+    /* Sign Out Button - Bold Pink Gradient */
     [data-testid="stSidebar"] .stButton:last-of-type button {
         background: transparent !important;
         border-color: rgba(248, 87, 166, 0.4) !important;
         color: #f857a6 !important;
+        font-weight: 700 !important;
     }
     
     [data-testid="stSidebar"] .stButton:last-of-type button:hover {
@@ -285,6 +297,12 @@ st.markdown("""
         border-color: transparent !important;
         color: white !important;
         box-shadow: 0 8px 24px rgba(248, 87, 166, 0.4);
+        font-weight: 800 !important;
+    }
+    
+    /* Emoji Support Everywhere */
+    button, .stButton, .stMarkdown, p, span, div {
+        font-family: 'Poppins', 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif !important;
     }
     
     /* Sidebar Elements */
@@ -293,13 +311,24 @@ st.markdown("""
         margin: 1rem 0 !important;
     }
     
-    [data-testid="stSidebar"] h3 {
-        font-size: 0.75rem !important;
+    /* Sidebar Captions - Bold & Stylish */
+    [data-testid="stSidebar"] .element-container p {
         font-weight: 600 !important;
         color: var(--text-secondary) !important;
+        font-size: 0.8125rem !important;
+    }
+    
+    [data-testid="stSidebar"] h3, [data-testid="stSidebar"] h2 {
+        font-size: 0.8125rem !important;
+        font-weight: 800 !important;
+        color: white !important;
         text-transform: uppercase !important;
-        letter-spacing: 0.05em !important;
-        margin: 1rem 0 0.75rem 0 !important;
+        letter-spacing: 0.1em !important;
+        margin: 1.25rem 0 1rem 0 !important;
+        background: var(--gradient-1);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
     }
     
     /* ==========================================
@@ -506,9 +535,6 @@ if "messages" not in st.session_state:
 
 if "current_chat_id" not in st.session_state:
     st.session_state.current_chat_id = None
-
-# Session persistence - Streamlit keeps session state during browser tab lifecycle
-# OAuth tokens are automatically persisted by the OAuth component
 
 if "client" not in st.session_state:
     try:
