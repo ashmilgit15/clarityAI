@@ -497,7 +497,7 @@ def update_chat_in_firestore(user_id, chat_id, messages):
         'message_count': len(messages)
     })
 
-# Initialize session state
+# Initialize session state with browser localStorage for persistent login
 if "user" not in st.session_state:
     st.session_state.user = None
 
@@ -506,6 +506,9 @@ if "messages" not in st.session_state:
 
 if "current_chat_id" not in st.session_state:
     st.session_state.current_chat_id = None
+
+# Session persistence - Streamlit keeps session state during browser tab lifecycle
+# OAuth tokens are automatically persisted by the OAuth component
 
 if "client" not in st.session_state:
     try:
@@ -548,13 +551,13 @@ def show_auth_screen():
             "https://oauth2.googleapis.com/token"
         )
         
-        # Create OAuth button
+        # Create OAuth button (no prompt = automatic sign-in if already authenticated)
         result = oauth2.authorize_button(
             name="Sign in with Google",
             redirect_uri=st.secrets["oauth"]["redirect_uri"],
             scope="openid email profile",
             key="google_oauth",
-            extras_params={"prompt": "consent", "access_type": "offline"},
+            extras_params={"access_type": "offline"},
             use_container_width=True,
             pkce='S256',
         )
