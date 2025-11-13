@@ -53,227 +53,301 @@ if not firebase_admin._apps:
 else:
     db = firestore.client()
 
-# Modern Tailwind CSS (same as before, keeping it short here)
+# Mobile-First Responsive Design with Professional UI
 st.markdown("""
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
     
-    * { font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif; }
+    * { 
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        box-sizing: border-box;
+    }
+    
     #MainMenu, footer, header {visibility: hidden !important;}
     .stDeployButton {display: none !important;}
     
     :root {
-        --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        --dark-bg: #0f0f1e;
-        --dark-card: #1a1a2e;
+        --primary: #6366f1;
+        --primary-dark: #4f46e5;
+        --primary-light: #818cf8;
+        --surface: #1e1e2e;
+        --surface-light: #2a2a3e;
+        --background: #0f0f1e;
+        --text-primary: #ffffff;
+        --text-secondary: #a1a1aa;
+        --border: rgba(255, 255, 255, 0.1);
+        --success: #22c55e;
+        --danger: #ef4444;
     }
     
-    .stApp { background: var(--dark-bg) !important; }
-    .block-container { padding: 0 !important; max-width: 100% !important; }
+    /* Global Styles */
+    .stApp { 
+        background: var(--background) !important;
+    }
     
-    /* Auth Screen */
+    .block-container { 
+        padding: 0 !important;
+        max-width: 100% !important;
+    }
+    
+    /* Mobile-First: Base mobile styles */
+    @media (max-width: 768px) {
+        .stApp {
+            padding-bottom: 80px !important;
+        }
+    }
+    
+    /* ==========================================
+       AUTH SCREEN - MOBILE RESPONSIVE
+    ========================================== */
     .auth-container {
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
         min-height: 100vh;
-        padding: 2rem;
-        background: radial-gradient(circle at 50% 50%, rgba(157, 78, 221, 0.1) 0%, transparent 50%);
+        padding: 1.5rem;
+        background: radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.1) 0%, transparent 60%);
     }
     
-    .auth-card {
-        background: var(--dark-card);
-        border: 1px solid rgba(157, 78, 221, 0.3);
-        border-radius: 24px;
-        padding: 3rem;
-        max-width: 450px;
-        width: 100%;
-        text-align: center;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-        animation: fadeInUp 0.8s ease-out;
+    @media (max-width: 480px) {
+        .auth-container {
+            padding: 1rem;
+        }
     }
     
     @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(30px); }
+        from { opacity: 0; transform: translateY(20px); }
         to { opacity: 1; transform: translateY(0); }
-    }
-    
-    .auth-logo {
-        font-size: 4rem;
-        margin-bottom: 1rem;
-        animation: float 3s ease-in-out infinite;
     }
     
     @keyframes float {
         0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-10px); }
+        50% { transform: translateY(-8px); }
     }
     
-    /* Center the auth form columns */
-    [data-testid="stVerticalBlock"] > [data-testid="stVerticalBlock"] {
-        display: flex;
-        justify-content: center;
-        align-items: center;
+    /* ==========================================
+       PROFESSIONAL SIDEBAR
+    ========================================== */
+    
+    /* Sidebar Container */
+    [data-testid="stSidebar"] {
+        background: var(--surface) !important;
+        border-right: 1px solid var(--border) !important;
     }
     
-    /* Style form inputs on auth screen */
-    .auth-container input[type="text"] {
-        background: rgba(157, 78, 221, 0.1) !important;
-        border: 1px solid rgba(157, 78, 221, 0.3) !important;
-        border-radius: 12px !important;
-        color: white !important;
-        padding: 0.75rem !important;
-        font-size: 1rem !important;
+    [data-testid="stSidebar"] > div:first-child {
+        background: var(--surface) !important;
+        padding: 1rem !important;
     }
     
-    .auth-container button {
-        background: var(--gradient-1) !important;
-        color: white !important;
-        border: none !important;
-        border-radius: 12px !important;
-        padding: 0.75rem 2rem !important;
-        font-size: 1.1rem !important;
-        font-weight: 600 !important;
-        cursor: pointer !important;
-        transition: all 0.3s ease !important;
-    }
-    
-    .auth-container button:hover {
-        transform: translateY(-2px) !important;
-        box-shadow: 0 10px 30px rgba(157, 78, 221, 0.4) !important;
-    }
-    
-    .auth-title {
-        font-size: 2.5rem;
-        font-weight: 800;
-        background: var(--gradient-1);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 0.5rem;
-    }
-    
-    .auth-subtitle {
-        color: #a0a0b0;
-        font-size: 1.1rem;
-        margin-bottom: 2rem;
-    }
-    
-    .google-btn {
-        background: white !important;
-        color: #333 !important;
-        border: none !important;
-        border-radius: 12px !important;
-        padding: 1rem 2rem !important;
-        font-weight: 600 !important;
-        font-size: 1rem !important;
-        width: 100%;
-        cursor: pointer;
-        transition: all 0.3s !important;
-        box-shadow: 0 4px 20px rgba(255, 255, 255, 0.1);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.75rem;
-    }
-    
-    .google-btn:hover {
-        transform: translateY(-2px) !important;
-        box-shadow: 0 8px 30px rgba(255, 255, 255, 0.2) !important;
-    }
-    
-    /* User Profile Display */
+    /* Professional User Profile Card */
     .user-profile-card {
-        background: var(--gradient-1);
-        padding: 1rem;
-        border-radius: 16px;
+        background: var(--surface-light);
+        padding: 1.25rem;
+        border-radius: 12px;
         display: flex;
         align-items: center;
-        gap: 1rem;
+        gap: 0.875rem;
         margin-bottom: 1.5rem;
-        box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+        border: 1px solid var(--border);
+        transition: all 0.2s ease;
+    }
+    
+    .user-profile-card:hover {
+        border-color: var(--primary-light);
+        background: rgba(99, 102, 241, 0.05);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
     }
     
     .user-avatar {
-        width: 48px;
-        height: 48px;
+        width: 44px;
+        height: 44px;
         border-radius: 50%;
         object-fit: cover;
-        border: 3px solid white;
+        border: 2px solid var(--primary);
+        flex-shrink: 0;
     }
     
     .user-info {
         flex: 1;
-        color: white;
+        min-width: 0;
     }
     
     .user-name {
-        font-size: 1rem;
+        font-size: 0.9375rem;
         font-weight: 600;
-        margin: 0;
+        color: var(--text-primary);
+        margin: 0 0 0.25rem 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     
     .user-email {
-        font-size: 0.8rem;
-        opacity: 0.9;
+        font-size: 0.75rem;
+        color: var(--text-secondary);
         margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     
-    /* Rest of the previous CSS styles... */
-    [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #1a1a2e 0%, #0f0f1e 100%) !important;
-        border-right: 1px solid rgba(157, 78, 221, 0.1) !important;
+    /* Sidebar Buttons - Professional Style */
+    [data-testid="stSidebar"] .stButton button {
+        background: transparent !important;
+        color: var(--text-primary) !important;
+        border: 1px solid var(--border) !important;
+        border-radius: 8px !important;
+        padding: 0.75rem 1rem !important;
+        font-size: 0.875rem !important;
+        font-weight: 500 !important;
+        transition: all 0.2s ease !important;
+        min-height: 44px !important;
     }
     
-    .stButton button {
-        background: var(--gradient-1) !important;
+    [data-testid="stSidebar"] .stButton button:hover {
+        background: var(--surface-light) !important;
+        border-color: var(--primary) !important;
+        transform: translateY(-1px);
+    }
+    
+    /* New Chat Button - Primary */
+    [data-testid="stSidebar"] .stButton:first-of-type button {
+        background: var(--primary) !important;
+        border-color: var(--primary) !important;
         color: white !important;
-        border: none !important;
-        border-radius: 16px !important;
-        padding: 1rem 2rem !important;
         font-weight: 600 !important;
-        transition: all 0.3s !important;
     }
     
-    .stButton button:hover {
-        transform: translateY(-2px) !important;
-        box-shadow: 0 8px 30px rgba(102, 126, 234, 0.5) !important;
+    /* Sign Out Button - Danger */
+    [data-testid="stSidebar"] .stButton:last-of-type button {
+        border-color: rgba(239, 68, 68, 0.3) !important;
+        color: var(--danger) !important;
     }
     
+    [data-testid="stSidebar"] .stButton:last-of-type button:hover {
+        background: rgba(239, 68, 68, 0.1) !important;
+        border-color: var(--danger) !important;
+    }
+    
+    /* Sidebar Elements */
+    [data-testid="stSidebar"] hr {
+        border-color: var(--border) !important;
+        margin: 1rem 0 !important;
+    }
+    
+    [data-testid="stSidebar"] h3 {
+        font-size: 0.75rem !important;
+        font-weight: 600 !important;
+        color: var(--text-secondary) !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.05em !important;
+        margin: 1rem 0 0.75rem 0 !important;
+    }
+    
+    /* ==========================================
+       CHAT INTERFACE - MOBILE OPTIMIZED
+    ========================================== */
     .stChatMessage {
         background: transparent !important;
-        padding: 1.5rem 0 !important;
+        padding: 1rem 0.5rem !important;
     }
     
+    /* User Messages */
     [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) [data-testid="stChatMessageContent"] {
-        background: var(--gradient-1) !important;
+        background: var(--primary) !important;
         color: white !important;
-        border-radius: 24px 24px 4px 24px !important;
-        padding: 1.25rem 1.5rem !important;
-        max-width: 75% !important;
+        border-radius: 16px 16px 4px 16px !important;
+        padding: 0.875rem 1rem !important;
+        max-width: 85% !important;
+        font-size: 0.9375rem !important;
+        line-height: 1.5 !important;
+        word-wrap: break-word !important;
     }
     
+    /* Assistant Messages */
     [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarAssistant"]) [data-testid="stChatMessageContent"] {
-        background: var(--dark-card) !important;
-        border: 1px solid rgba(157, 78, 221, 0.2) !important;
-        border-radius: 24px 24px 24px 4px !important;
-        padding: 1.25rem 1.5rem !important;
-        max-width: 75% !important;
+        background: var(--surface) !important;
+        border: 1px solid var(--border) !important;
+        border-radius: 16px 16px 16px 4px !important;
+        padding: 0.875rem 1rem !important;
+        max-width: 85% !important;
+        font-size: 0.9375rem !important;
+        line-height: 1.6 !important;
+        color: var(--text-primary) !important;
     }
     
+    /* Chat Input - Touch Optimized */
     .stChatInputContainer {
-        background: var(--dark-card) !important;
-        border: 2px solid rgba(157, 78, 221, 0.3) !important;
-        border-radius: 28px !important;
-        padding: 0.75rem 1.5rem !important;
+        background: var(--surface) !important;
+        border: 1px solid var(--border) !important;
+        border-radius: 24px !important;
+        padding: 0.625rem 1.25rem !important;
+        transition: all 0.2s ease !important;
+    }
+    
+    .stChatInputContainer:focus-within {
+        border-color: var(--primary) !important;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1) !important;
     }
     
     .stChatInput input {
         background: transparent !important;
-        color: white !important;
+        color: var(--text-primary) !important;
         border: none !important;
+        font-size: 1rem !important;
+        min-height: 44px !important;
+    }
+    
+    .stChatInput input::placeholder {
+        color: var(--text-secondary) !important;
+    }
+    
+    /* ==========================================
+       MOBILE RESPONSIVE
+    ========================================== */
+    @media (max-width: 768px) {
+        [data-testid="stSidebar"] > div:first-child {
+            padding: 0.75rem !important;
+        }
+        
+        .user-profile-card {
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+        }
+        
+        [data-testid="stSidebar"] .stButton button {
+            padding: 0.875rem 1rem !important;
+            min-height: 48px !important;
+        }
+        
+        [data-testid="stChatMessage"] [data-testid="stChatMessageContent"] {
+            max-width: 90% !important;
+            font-size: 1rem !important;
+        }
+        
+        .stChatInput input {
+            font-size: 16px !important;
+            min-height: 48px !important;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .user-name {
+            font-size: 0.875rem !important;
+        }
+        
+        .user-email {
+            font-size: 0.6875rem !important;
+        }
     }
 </style>
 """, unsafe_allow_html=True)
