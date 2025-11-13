@@ -53,14 +53,14 @@ if not firebase_admin._apps:
 else:
     db = firestore.client()
 
-# Mobile-First Responsive Design with Professional UI
+# Stylish Mobile-First Design with Beautiful Gradients
 st.markdown("""
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
     
     * { 
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
         box-sizing: border-box;
     }
     
@@ -68,17 +68,18 @@ st.markdown("""
     .stDeployButton {display: none !important;}
     
     :root {
-        --primary: #6366f1;
-        --primary-dark: #4f46e5;
-        --primary-light: #818cf8;
-        --surface: #1e1e2e;
-        --surface-light: #2a2a3e;
-        --background: #0f0f1e;
+        --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        --gradient-purple: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --gradient-pink: linear-gradient(135deg, #f857a6 0%, #ff5858 100%);
+        --background: #0a0a1e;
+        --surface: rgba(255, 255, 255, 0.05);
+        --surface-hover: rgba(255, 255, 255, 0.1);
         --text-primary: #ffffff;
-        --text-secondary: #a1a1aa;
+        --text-secondary: rgba(255, 255, 255, 0.7);
         --border: rgba(255, 255, 255, 0.1);
-        --success: #22c55e;
-        --danger: #ef4444;
+        --glow: rgba(102, 126, 234, 0.5);
     }
     
     /* Global Styles */
@@ -131,106 +132,159 @@ st.markdown("""
        PROFESSIONAL SIDEBAR
     ========================================== */
     
-    /* Sidebar Container */
+    /* Stylish Sidebar with Glassmorphism */
     [data-testid="stSidebar"] {
-        background: var(--surface) !important;
-        border-right: 1px solid var(--border) !important;
+        background: linear-gradient(180deg, rgba(10, 10, 30, 0.95) 0%, rgba(15, 15, 35, 0.98) 100%) !important;
+        backdrop-filter: blur(20px) !important;
+        border-right: 1px solid rgba(102, 126, 234, 0.2) !important;
+        box-shadow: 4px 0 24px rgba(102, 126, 234, 0.1) !important;
     }
     
     [data-testid="stSidebar"] > div:first-child {
-        background: var(--surface) !important;
-        padding: 1rem !important;
+        background: transparent !important;
+        padding: 1.25rem !important;
     }
     
-    /* Professional User Profile Card */
+    /* Gorgeous User Profile Card with Gradient */
     .user-profile-card {
-        background: var(--surface-light);
+        background: var(--gradient-1);
         padding: 1.25rem;
-        border-radius: 12px;
+        border-radius: 16px;
         display: flex;
         align-items: center;
-        gap: 0.875rem;
+        gap: 1rem;
         margin-bottom: 1.5rem;
-        border: 1px solid var(--border);
-        transition: all 0.2s ease;
+        box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .user-profile-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .user-profile-card:hover::before {
+        opacity: 1;
     }
     
     .user-profile-card:hover {
-        border-color: var(--primary-light);
-        background: rgba(99, 102, 241, 0.05);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+        transform: translateY(-4px);
+        box-shadow: 0 12px 48px rgba(102, 126, 234, 0.4);
     }
     
     .user-avatar {
-        width: 44px;
-        height: 44px;
+        width: 48px;
+        height: 48px;
         border-radius: 50%;
         object-fit: cover;
-        border: 2px solid var(--primary);
+        border: 3px solid rgba(255, 255, 255, 0.9);
         flex-shrink: 0;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        position: relative;
+        z-index: 1;
     }
     
     .user-info {
         flex: 1;
         min-width: 0;
+        position: relative;
+        z-index: 1;
     }
     
     .user-name {
-        font-size: 0.9375rem;
+        font-size: 1rem;
         font-weight: 600;
-        color: var(--text-primary);
+        color: white;
         margin: 0 0 0.25rem 0;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
     
     .user-email {
-        font-size: 0.75rem;
-        color: var(--text-secondary);
+        font-size: 0.8125rem;
+        color: rgba(255, 255, 255, 0.9);
         margin: 0;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     }
     
-    /* Sidebar Buttons - Professional Style */
+    /* Stylish Gradient Buttons */
     [data-testid="stSidebar"] .stButton button {
-        background: transparent !important;
-        color: var(--text-primary) !important;
-        border: 1px solid var(--border) !important;
-        border-radius: 8px !important;
-        padding: 0.75rem 1rem !important;
-        font-size: 0.875rem !important;
+        background: var(--surface) !important;
+        color: white !important;
+        border: 1px solid rgba(102, 126, 234, 0.3) !important;
+        border-radius: 12px !important;
+        padding: 0.875rem 1.25rem !important;
+        font-size: 0.9375rem !important;
         font-weight: 500 !important;
-        transition: all 0.2s ease !important;
-        min-height: 44px !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        min-height: 48px !important;
+        backdrop-filter: blur(10px) !important;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    [data-testid="stSidebar"] .stButton button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+        transition: left 0.5s ease;
+    }
+    
+    [data-testid="stSidebar"] .stButton button:hover::before {
+        left: 100%;
     }
     
     [data-testid="stSidebar"] .stButton button:hover {
-        background: var(--surface-light) !important;
-        border-color: var(--primary) !important;
-        transform: translateY(-1px);
+        background: var(--surface-hover) !important;
+        border-color: rgba(102, 126, 234, 0.6) !important;
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
     }
     
-    /* New Chat Button - Primary */
+    /* New Chat Button - Beautiful Gradient */
     [data-testid="stSidebar"] .stButton:first-of-type button {
-        background: var(--primary) !important;
-        border-color: var(--primary) !important;
+        background: var(--gradient-1) !important;
+        border: none !important;
         color: white !important;
         font-weight: 600 !important;
+        box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
     }
     
-    /* Sign Out Button - Danger */
+    [data-testid="stSidebar"] .stButton:first-of-type button:hover {
+        box-shadow: 0 8px 32px rgba(102, 126, 234, 0.6);
+        transform: translateY(-3px) scale(1.03);
+    }
+    
+    /* Sign Out Button - Pink Gradient */
     [data-testid="stSidebar"] .stButton:last-of-type button {
-        border-color: rgba(239, 68, 68, 0.3) !important;
-        color: var(--danger) !important;
+        background: transparent !important;
+        border-color: rgba(248, 87, 166, 0.4) !important;
+        color: #f857a6 !important;
     }
     
     [data-testid="stSidebar"] .stButton:last-of-type button:hover {
-        background: rgba(239, 68, 68, 0.1) !important;
-        border-color: var(--danger) !important;
+        background: var(--gradient-pink) !important;
+        border-color: transparent !important;
+        color: white !important;
+        box-shadow: 0 8px 24px rgba(248, 87, 166, 0.4);
     }
     
     /* Sidebar Elements */
@@ -256,54 +310,91 @@ st.markdown("""
         padding: 1rem 0.5rem !important;
     }
     
-    /* User Messages */
+    /* User Messages - Beautiful Gradient */
     [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) [data-testid="stChatMessageContent"] {
-        background: var(--primary) !important;
+        background: var(--gradient-1) !important;
         color: white !important;
-        border-radius: 16px 16px 4px 16px !important;
-        padding: 0.875rem 1rem !important;
-        max-width: 85% !important;
-        font-size: 0.9375rem !important;
-        line-height: 1.5 !important;
-        word-wrap: break-word !important;
-    }
-    
-    /* Assistant Messages */
-    [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarAssistant"]) [data-testid="stChatMessageContent"] {
-        background: var(--surface) !important;
-        border: 1px solid var(--border) !important;
-        border-radius: 16px 16px 16px 4px !important;
-        padding: 0.875rem 1rem !important;
+        border-radius: 20px 20px 4px 20px !important;
+        padding: 1rem 1.25rem !important;
         max-width: 85% !important;
         font-size: 0.9375rem !important;
         line-height: 1.6 !important;
-        color: var(--text-primary) !important;
+        word-wrap: break-word !important;
+        box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+        position: relative;
+        animation: slideInRight 0.3s ease-out;
     }
     
-    /* Chat Input - Touch Optimized */
+    @keyframes slideInRight {
+        from {
+            opacity: 0;
+            transform: translateX(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    
+    /* Assistant Messages - Glassmorphism */
+    [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarAssistant"]) [data-testid="stChatMessageContent"] {
+        background: rgba(255, 255, 255, 0.05) !important;
+        backdrop-filter: blur(10px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: 20px 20px 20px 4px !important;
+        padding: 1rem 1.25rem !important;
+        max-width: 85% !important;
+        font-size: 0.9375rem !important;
+        line-height: 1.6 !important;
+        color: white !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        animation: slideInLeft 0.3s ease-out;
+    }
+    
+    @keyframes slideInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    
+    /* Stylish Chat Input with Gradient Border */
     .stChatInputContainer {
-        background: var(--surface) !important;
-        border: 1px solid var(--border) !important;
-        border-radius: 24px !important;
-        padding: 0.625rem 1.25rem !important;
-        transition: all 0.2s ease !important;
+        background: rgba(255, 255, 255, 0.05) !important;
+        backdrop-filter: blur(10px) !important;
+        border: 2px solid transparent !important;
+        background-image: linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05)), 
+                          var(--gradient-1) !important;
+        background-origin: border-box !important;
+        background-clip: padding-box, border-box !important;
+        border-radius: 28px !important;
+        padding: 0.75rem 1.5rem !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
     }
     
     .stChatInputContainer:focus-within {
-        border-color: var(--primary) !important;
-        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1) !important;
+        background-image: linear-gradient(rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.08)), 
+                          var(--gradient-1) !important;
+        box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3) !important;
+        transform: translateY(-2px);
     }
     
     .stChatInput input {
         background: transparent !important;
-        color: var(--text-primary) !important;
+        color: white !important;
         border: none !important;
         font-size: 1rem !important;
-        min-height: 44px !important;
+        min-height: 48px !important;
+        font-weight: 400;
     }
     
     .stChatInput input::placeholder {
-        color: var(--text-secondary) !important;
+        color: rgba(255, 255, 255, 0.5) !important;
     }
     
     /* ==========================================
