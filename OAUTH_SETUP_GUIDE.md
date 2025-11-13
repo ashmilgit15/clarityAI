@@ -210,7 +210,7 @@ keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -sto
 Add your OAuth credentials:
 
 ```toml
-GROQ_API_KEY = "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"
+GROQ_API_KEY = "your-groq-api-key-here"
 
 # Firebase credentials path
 firebase_credentials_path = "firebase-credentials.json"
