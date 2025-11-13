@@ -441,39 +441,177 @@ st.markdown("""
     }
     
     /* ==========================================
-       MOBILE RESPONSIVE - CLEAN & ORGANIZED
+       MOBILE - CHATGPT STYLE PERFECT UI
     ========================================== */
     
+    /* Custom Hamburger Menu Button for Mobile */
+    .mobile-menu-btn {
+        display: none;
+        position: fixed;
+        top: 1rem;
+        left: 1rem;
+        z-index: 9999;
+        width: 40px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+    
+    .mobile-menu-btn:active {
+        transform: scale(0.95);
+        background: rgba(255, 255, 255, 0.15);
+    }
+    
+    .mobile-menu-btn svg {
+        width: 24px;
+        height: 24px;
+        stroke: white;
+        stroke-width: 2;
+        fill: none;
+    }
+    
     @media (max-width: 768px) {
-        /* Sidebar becomes collapsible (Streamlit native) */
+        /* Show hamburger menu on mobile */
+        .mobile-menu-btn {
+            display: flex !important;
+        }
+        
+        /* Hide sidebar by default on mobile */
         [data-testid="stSidebar"] {
-            min-width: 260px !important;
-            max-width: 280px !important;
+            position: fixed !important;
+            left: -100% !important;
+            top: 0 !important;
+            height: 100vh !important;
+            width: 80vw !important;
+            max-width: 300px !important;
+            z-index: 9998 !important;
+            transition: left 0.3s ease !important;
+            box-shadow: 2px 0 16px rgba(0, 0, 0, 0.3) !important;
         }
         
-        [data-testid="stSidebar"][aria-expanded="false"] {
-            margin-left: -280px;
+        /* Show sidebar when toggled */
+        [data-testid="stSidebar"][data-collapsed="false"] {
+            left: 0 !important;
         }
         
-        [data-testid="stSidebar"] > div:first-child {
-            padding: 1rem !important;
+        /* Overlay when sidebar is open */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9997;
+            backdrop-filter: blur(4px);
         }
         
-        /* Main content takes full width */
+        .sidebar-overlay.active {
+            display: block;
+        }
+        
+        /* Main content - ChatGPT style */
+        .main {
+            padding: 0 !important;
+            margin-left: 0 !important;
+        }
+        
         .main .block-container {
-            padding: 0.5rem 1rem !important;
+            padding: 4rem 0 0 0 !important;
             max-width: 100% !important;
         }
         
-        /* Profile card compact */
+        /* ChatGPT-style messages */
+        [data-testid="stChatMessage"] {
+            padding: 1.5rem 1rem !important;
+            margin: 0 !important;
+            border-radius: 0 !important;
+            max-width: 100% !important;
+        }
+        
+        /* User messages - light background */
+        [data-testid="stChatMessage"][data-testid*="user"] {
+            background: #f7f7f8 !important;
+        }
+        
+        /* Assistant messages - white background */
+        [data-testid="stChatMessage"][data-testid*="assistant"] {
+            background: white !important;
+        }
+        
+        /* Message content */
+        [data-testid="stChatMessageContent"] {
+            max-width: 100% !important;
+            padding: 0 !important;
+            margin: 0 auto !important;
+            font-size: 1rem !important;
+            line-height: 1.6 !important;
+            color: #000 !important;
+        }
+        
+        [data-testid="stChatMessageContent"] p {
+            margin: 0.5rem 0 !important;
+            color: #000 !important;
+        }
+        
+        /* Chat input - ChatGPT style fixed bottom */
+        [data-testid="stChatInputContainer"] {
+            position: fixed !important;
+            bottom: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            z-index: 1000 !important;
+            margin: 0 !important;
+            padding: 1rem !important;
+            background: white !important;
+            border-top: 1px solid #e5e5e5 !important;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1) !important;
+        }
+        
+        .stChatInput {
+            max-width: 100% !important;
+            margin: 0 auto !important;
+        }
+        
+        .stChatInput textarea {
+            background: white !important;
+            border: 1px solid #d1d1d1 !important;
+            border-radius: 12px !important;
+            padding: 0.875rem 3rem 0.875rem 1rem !important;
+            font-size: 16px !important;
+            color: #000 !important;
+            min-height: 24px !important;
+            max-height: 200px !important;
+            resize: none !important;
+        }
+        
+        .stChatInput textarea:focus {
+            outline: none !important;
+            border-color: #10a37f !important;
+            box-shadow: 0 0 0 1px #10a37f !important;
+        }
+        
+        /* Chat container padding */
+        [data-testid="stVerticalBlock"] {
+            padding-bottom: 100px !important;
+        }
+        
+        /* Profile card mobile */
         .user-profile-card {
-            padding: 0.875rem 1rem;
-            margin-bottom: 1rem;
+            padding: 1rem !important;
+            margin-bottom: 1rem !important;
         }
         
         .user-avatar {
-            width: 42px;
-            height: 42px;
+            width: 40px !important;
+            height: 40px !important;
         }
         
         .user-name {
@@ -484,72 +622,79 @@ st.markdown("""
             font-size: 0.75rem !important;
         }
         
-        /* Buttons touch-optimized */
+        /* Sidebar buttons */
         [data-testid="stSidebar"] .stButton button {
-            padding: 1rem 1.25rem !important;
-            min-height: 52px !important;
-            font-size: 1rem !important;
-        }
-        
-        /* Chat messages take more width */
-        [data-testid="stChatMessage"] [data-testid="stChatMessageContent"] {
-            max-width: 92% !important;
-            font-size: 1rem !important;
-            padding: 1rem 1.25rem !important;
-        }
-        
-        /* Chat input fixed at bottom */
-        [data-testid="stChatInputContainer"] {
-            position: fixed !important;
-            bottom: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            z-index: 999 !important;
-            margin: 0 !important;
-            padding: 1rem !important;
-            background: rgba(10, 10, 30, 0.98) !important;
-            backdrop-filter: blur(20px) !important;
-            border-radius: 0 !important;
-            border: none !important;
-            border-top: 1px solid rgba(102, 126, 234, 0.3) !important;
-            box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.3) !important;
-        }
-        
-        .stChatInput input {
-            font-size: 16px !important;
+            padding: 0.875rem 1rem !important;
             min-height: 48px !important;
-        }
-        
-        /* Add padding to bottom of chat for fixed input */
-        .main {
-            padding-bottom: 100px !important;
-        }
-        
-        /* Chat container */
-        [data-testid="stVerticalBlock"] {
-            padding-bottom: 120px !important;
+            font-size: 0.9375rem !important;
         }
     }
     
     @media (max-width: 480px) {
+        .mobile-menu-btn {
+            top: 0.75rem;
+            left: 0.75rem;
+        }
+        
         [data-testid="stSidebar"] {
-            min-width: 240px !important;
-            max-width: 260px !important;
+            width: 85vw !important;
         }
         
-        .user-name {
-            font-size: 0.875rem !important;
+        [data-testid="stChatMessage"] {
+            padding: 1.25rem 0.875rem !important;
         }
         
-        .user-email {
-            font-size: 0.6875rem !important;
-        }
-        
-        [data-testid="stSidebar"] .stButton button {
-            font-size: 0.9375rem !important;
+        [data-testid="stChatInputContainer"] {
+            padding: 0.875rem !important;
         }
     }
 </style>
+""", unsafe_allow_html=True)
+
+# Add hamburger menu button for mobile
+st.markdown("""
+<div class="mobile-menu-btn" id="mobileMenuBtn" onclick="toggleSidebar()">
+    <svg viewBox="0 0 24 24">
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+</div>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<script>
+function toggleSidebar() {
+    const sidebar = document.querySelector('[data-testid="stSidebar"]');
+    const overlay = document.getElementById('sidebarOverlay');
+    const isOpen = sidebar.getAttribute('data-collapsed') === 'false';
+    
+    if (isOpen) {
+        sidebar.setAttribute('data-collapsed', 'true');
+        overlay.classList.remove('active');
+    } else {
+        sidebar.setAttribute('data-collapsed', 'false');
+        overlay.classList.add('active');
+    }
+}
+
+// Initialize sidebar as closed on mobile
+if (window.innerWidth <= 768) {
+    const sidebar = document.querySelector('[data-testid="stSidebar"]');
+    if (sidebar) {
+        sidebar.setAttribute('data-collapsed', 'true');
+    }
+}
+
+// Close sidebar on window resize
+window.addEventListener('resize', () => {
+    if (window.innerWidth > 768) {
+        const sidebar = document.querySelector('[data-testid="stSidebar"]');
+        const overlay = document.getElementById('sidebarOverlay');
+        if (sidebar) sidebar.removeAttribute('data-collapsed');
+        if (overlay) overlay.classList.remove('active');
+    }
+});
+</script>
 """, unsafe_allow_html=True)
 
 # System prompt
