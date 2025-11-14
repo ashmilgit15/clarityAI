@@ -623,10 +623,11 @@ st.markdown("""
         top: 0 !important;
         left: 0 !important;
         z-index: 10000 !important;
+        overflow-y: auto !important;
     }
     
     .auth-card {
-        max-width: 440px;
+        max-width: 480px;
         width: 100%;
         text-align: center;
         background: var(--secondary-bg);
@@ -634,6 +635,7 @@ st.markdown("""
         border-radius: 24px;
         border: 1px solid var(--border-light);
         box-shadow: var(--shadow-lg);
+        margin: auto;
     }
     
     .auth-logo {
@@ -1090,7 +1092,7 @@ if "current_chat_id" not in st.session_state:
     st.session_state.current_chat_id = None
 
 if "auth_mode" not in st.session_state:
-    st.session_state.auth_mode = "login"
+    st.session_state.auth_mode = "signup"  # Show signup form first
 
 if "client" not in st.session_state:
     try:
@@ -1107,8 +1109,21 @@ if "client" not in st.session_state:
 def show_auth_screen():
     """Display authentication screen with AuraGlow branding"""
     
+    # Hide sidebar when showing auth
+    st.markdown("""
+    <style>
+        [data-testid="stSidebar"] {
+            display: none !important;
+        }
+        .main .block-container {
+            padding: 0 !important;
+        }
+    </style>
+    """, unsafe_allow_html=True)
+    
     is_signup = st.session_state.auth_mode == "signup"
     
+    # Create centered container
     st.markdown(f"""
     <div class="auth-container">
         <div class="auth-card">
@@ -1121,8 +1136,7 @@ def show_auth_screen():
     """, unsafe_allow_html=True)
     
     if is_signup:
-        st.markdown("<h3 style='color: var(--text-primary); text-align: center; margin-bottom: 1.5rem; font-size: 1.125rem;'>Create Your Account</h3>", unsafe_allow_html=True)
-        
+        # Signup form fields
         email = st.text_input(
             "Email Address",
             placeholder="Enter your email address",
@@ -1221,8 +1235,7 @@ def show_auth_screen():
             st.rerun()
             
     else:  # Login mode
-        st.markdown("<h3 style='color: var(--text-primary); text-align: center; margin-bottom: 1.5rem; font-size: 1.125rem;'>Sign In</h3>", unsafe_allow_html=True)
-        
+        # Login form fields
         login_email = st.text_input(
             "Email Address",
             placeholder="Enter your registered email address",
