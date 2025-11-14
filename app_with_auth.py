@@ -56,8 +56,20 @@ st.markdown("""
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
     
     * { 
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         box-sizing: border-box;
+    }
+    
+    /* === DESIGN SYSTEM: COLOR PALETTE === */
+    :root {
+        --bg-primary: #1E293B;
+        --bg-secondary: #2A3A50;
+        --bg-elevated: #334155;
+        --text-primary: #F1F5F9;
+        --text-secondary: #94A3B8;
+        --accent-teal: #4FD1C5;
+        --accent-coral: #F59E0B;
+        --border-subtle: #475569;
     }
     
     /* Hide Streamlit elements */
@@ -65,9 +77,10 @@ st.markdown("""
     .stDeployButton {display: none !important;}
     [data-testid="stToolbar"] {display: none !important;}
     
-    /* Global Reset */
+    /* === MAIN APP BACKGROUND === */
     .stApp { 
-        background: #343541 !important;
+        background: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%) !important;
+        min-height: 100vh;
     }
     
     .block-container { 
@@ -75,20 +88,52 @@ st.markdown("""
         max-width: 100% !important;
     }
     
-    /* ==========================================
-       SIDEBAR - ChatGPT Style
-    ========================================== */
+    /* === SIDEBAR STYLING === */
     [data-testid="stSidebar"] {
-        background: #202123 !important;
-        border-right: none !important;
+        background: var(--bg-elevated) !important;
+        border-right: 1px solid var(--border-subtle) !important;
         padding: 0 !important;
-        min-width: 260px !important;
-        max-width: 260px !important;
+        min-width: 280px !important;
+        max-width: 280px !important;
     }
     
     [data-testid="stSidebar"] > div:first-child {
         background: transparent !important;
-        padding: 0.5rem !important;
+        padding: 24px 16px !important;
+    }
+    
+    /* Clarity Logo - Custom Minimalist Design */
+    .clarity-logo {
+        text-align: center;
+        padding: 24px 0;
+        margin-bottom: 24px;
+        border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    .clarity-logo-icon {
+        width: 48px;
+        height: 48px;
+        margin: 0 auto 12px;
+        background: linear-gradient(135deg, var(--accent-teal) 0%, #38B2AC 100%);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 12px rgba(79, 209, 197, 0.3);
+    }
+    
+    .clarity-logo-icon svg {
+        width: 28px;
+        height: 28px;
+        stroke: var(--text-primary);
+        fill: none;
+    }
+    
+    .clarity-logo-text {
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--text-primary);
+        letter-spacing: -0.01em;
     }
     
     /* User Profile Section */
