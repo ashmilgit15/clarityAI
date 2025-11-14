@@ -1,4 +1,24 @@
 /* Professional Mobile-First Responsive Design for Clarity AI */
+/* ChatGPT-Inspired Dark Theme */
+
+/* ========================================
+   COLOR VARIABLES
+======================================== */
+
+:root {
+    --dark-bg: #212121;
+    --surface: #2d2d2d;
+    --surface-light: #1f1f1f;
+    --sidebar-bg: #171717;
+    --border: #3d3d3d;
+    --primary: #667eea;
+    --primary-light: #7688eb;
+    --primary-dark: #5568d3;
+    --text-primary: #ececec;
+    --text-secondary: #8e8ea0;
+    --text-muted: #565869;
+    --danger: #ef4444;
+}
 
 /* ========================================
    SIDEBAR - CLEAN & PROFESSIONAL
@@ -6,18 +26,18 @@
 
 /* Sidebar Container */
 [data-testid="stSidebar"] {
-    background: var(--surface) !important;
-    border-right: 1px solid var(--border);
+    background: var(--sidebar-bg) !important;
+    border-right: 1px solid var(--border) !important;
 }
 
 [data-testid="stSidebar"] > div:first-child {
-    background: var(--surface) !important;
+    background: var(--sidebar-bg) !important;
     padding: 1rem !important;
 }
 
 /* Professional User Profile Card */
 .user-profile-card {
-    background: var(--surface-light);
+    background: var(--surface);
     padding: 1.25rem;
     border-radius: 12px;
     display: flex;
@@ -29,8 +49,8 @@
 }
 
 .user-profile-card:hover {
-    border-color: var(--primary-light);
-    background: rgba(99, 102, 241, 0.05);
+    border-color: var(--text-muted);
+    background: var(--surface-light);
 }
 
 .user-avatar {
@@ -80,13 +100,12 @@
 }
 
 [data-testid="stSidebar"] .stButton button:hover {
-    background: var(--surface-light) !important;
-    border-color: var(--primary) !important;
-    transform: translateY(-1px);
+    background: var(--surface) !important;
+    border-color: var(--text-muted) !important;
 }
 
 [data-testid="stSidebar"] .stButton button:active {
-    transform: translateY(0);
+    transform: translateY(1px);
 }
 
 /* New Chat Button - Primary Action */
@@ -156,7 +175,7 @@
 /* Chat Messages */
 .stChatMessage {
     background: transparent !important;
-    padding: 1rem 0.5rem !important;
+    padding: 0.875rem 0.5rem !important;
 }
 
 /* User Messages */
@@ -169,11 +188,12 @@
     font-size: 0.9375rem !important;
     line-height: 1.5 !important;
     word-wrap: break-word !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 /* Assistant Messages */
 [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarAssistant"]) [data-testid="stChatMessageContent"] {
-    background: var(--surface) !important;
+    background: var(--surface-light) !important;
     border: 1px solid var(--border) !important;
     border-radius: 16px 16px 16px 4px !important;
     padding: 0.875rem 1rem !important;
@@ -181,6 +201,7 @@
     font-size: 0.9375rem !important;
     line-height: 1.6 !important;
     color: var(--text-primary) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 /* Chat Input - Touch Optimized */
@@ -188,21 +209,23 @@
     background: var(--surface) !important;
     border: 1px solid var(--border) !important;
     border-radius: 24px !important;
-    padding: 0.625rem 1.25rem !important;
+    padding: 0.5rem 1rem !important;
     transition: all 0.2s ease !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .stChatInputContainer:focus-within {
-    border-color: var(--primary) !important;
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1) !important;
+    border-color: var(--text-muted) !important;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3) !important;
 }
 
 .stChatInput input {
     background: transparent !important;
     color: var(--text-primary) !important;
     border: none !important;
-    font-size: 1rem !important;
+    font-size: 0.9375rem !important;
     min-height: 44px !important; /* Touch-friendly */
+    padding: 0.5rem 0 !important;
 }
 
 .stChatInput input::placeholder {
@@ -350,8 +373,8 @@ html {
 /* High contrast for readability */
 @media (prefers-contrast: high) {
     :root {
-        --text-secondary: #d4d4d8;
-        --border: rgba(255, 255, 255, 0.2);
+        --text-secondary: #b4b4b4;
+        --border: rgba(255, 255, 255, 0.15);
     }
 }
 
