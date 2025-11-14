@@ -861,7 +861,7 @@ if "current_chat_id" not in st.session_state:
     st.session_state.current_chat_id = None
 
 if "auth_mode" not in st.session_state:
-    st.session_state.auth_mode = "signup"  # Default to signup
+    st.session_state.auth_mode = "login"  # Default to login
 
 if "client" not in st.session_state:
     try:
@@ -873,22 +873,21 @@ if "client" not in st.session_state:
 
 # Authentication Screen
 def show_auth_screen():
-    """Display authentication screen with sign-up first, then login"""
+    """Display authentication screen with login-first approach"""
     
     # Determine which mode to show
     is_signup = st.session_state.auth_mode == "signup"
     
+    # Compact header
     st.markdown(f"""
-    <div class="auth-container">
-        <div class="auth-card">
-            <div class="auth-icon">🧘</div>
-            <h1 class="auth-title">{'Join Clarity' if is_signup else 'Welcome Back'}</h1>
-            <p class="auth-subtitle">{'Start your wellness journey today' if is_signup else 'Continue your wellness journey'}</p>
-        </div>
+    <div style="text-align: center; padding: 1.5rem 1rem 1rem 1rem;">
+        <div style="font-size: 3rem; margin-bottom: 0.5rem;">🧘</div>
+        <h1 style="color: #ececf1; font-size: 1.75rem; font-weight: 700; margin-bottom: 0.5rem;">{'Join Clarity' if is_signup else 'Welcome Back'}</h1>
+        <p style="color: #8e8ea0; font-size: 0.9375rem; margin-bottom: 0;">{'Start your wellness journey today' if is_signup else 'Sign in to continue your wellness journey'}</p>
     </div>
     """, unsafe_allow_html=True)
     
-    col1, col2, col3 = st.columns([1, 2, 1])
+    col1, col2, col3 = st.columns([1, 2.5, 1])
     
     with col2:
         if is_signup:
