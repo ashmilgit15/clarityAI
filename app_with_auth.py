@@ -353,7 +353,7 @@ st.markdown("""
     }
     
     .auth-card {
-        max-width: 420px;
+        max-width: 460px;
         width: 100%;
         text-align: center;
         background: rgba(32, 33, 35, 0.8);
@@ -383,6 +383,113 @@ st.markdown("""
         color: #8e8ea0;
         margin-bottom: 2.5rem;
         line-height: 1.6;
+    }
+    
+    /* Auth Form Inputs */
+    .auth-input {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        margin-bottom: 1rem;
+        background: rgba(64, 65, 79, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        color: #ececf1;
+        font-size: 1rem;
+        font-family: inherit;
+        transition: all 0.2s ease;
+        min-height: 48px;
+    }
+    
+    .auth-input:focus {
+        outline: none;
+        border-color: rgba(102, 126, 234, 0.5);
+        background: rgba(64, 65, 79, 0.8);
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    
+    .auth-input::placeholder {
+        color: #8e8ea0;
+    }
+    
+    /* Auth Buttons */
+    .auth-btn {
+        width: 100%;
+        padding: 0.875rem 1.5rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        border-radius: 10px;
+        color: white;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        min-height: 48px;
+        margin-top: 0.5rem;
+    }
+    
+    .auth-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+    
+    .auth-btn:active {
+        transform: translateY(0);
+    }
+    
+    .auth-btn-secondary {
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #ececf1;
+        margin-top: 0.75rem;
+    }
+    
+    .auth-btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.3);
+        transform: none;
+        box-shadow: none;
+    }
+    
+    .auth-divider {
+        display: flex;
+        align-items: center;
+        margin: 1.5rem 0;
+        color: #8e8ea0;
+        font-size: 0.875rem;
+    }
+    
+    .auth-divider::before,
+    .auth-divider::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .auth-divider::before {
+        margin-right: 1rem;
+    }
+    
+    .auth-divider::after {
+        margin-left: 1rem;
+    }
+    
+    .auth-toggle {
+        margin-top: 1.5rem;
+        color: #8e8ea0;
+        font-size: 0.9375rem;
+    }
+    
+    .auth-toggle a {
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 600;
+        cursor: pointer;
+    }
+    
+    .auth-toggle a:hover {
+        color: #7688eb;
+        text-decoration: underline;
     }
     
     /* ==========================================
@@ -484,7 +591,7 @@ st.markdown("""
             padding: 1.25rem 1rem !important;
         }
         
-        /* Chat Input */
+        /* Chat Input - Mobile Optimized */
         .stChatInput {
             padding: 0 0.75rem !important;
             margin-bottom: 1rem !important;
@@ -492,6 +599,8 @@ st.markdown("""
         
         .stChatInput textarea {
             font-size: 16px !important;
+            min-height: 48px !important;
+            padding: 0.875rem 3rem 0.875rem 1rem !important;
         }
         
         /* Welcome Screen */
@@ -506,6 +615,29 @@ st.markdown("""
         .welcome-subtitle {
             font-size: 1rem !important;
         }
+        
+        /* Auth Screen - Mobile */
+        .auth-container {
+            padding: 1.5rem !important;
+        }
+        
+        .auth-card {
+            padding: 2rem 1.5rem !important;
+        }
+        
+        .auth-input,
+        .auth-btn,
+        .auth-btn-secondary {
+            min-height: 48px !important;
+            font-size: 16px !important;
+        }
+        
+        /* Sidebar Buttons - Touch Friendly */
+        [data-testid="stSidebar"] .stButton button {
+            min-height: 48px !important;
+            padding: 0.75rem !important;
+            font-size: 1rem !important;
+        }
     }
     
     @media (max-width: 480px) {
@@ -515,7 +647,7 @@ st.markdown("""
         }
         
         [data-testid="stSidebar"] {
-            width: 85vw !important;
+            width: 90vw !important;
         }
         
         .welcome-screen {
@@ -528,6 +660,22 @@ st.markdown("""
         
         .welcome-title, .auth-title {
             font-size: 1.5rem !important;
+        }
+        
+        .auth-subtitle {
+            font-size: 0.9375rem !important;
+        }
+        
+        .auth-container {
+            padding: 1rem !important;
+        }
+        
+        .auth-card {
+            padding: 1.75rem 1.25rem !important;
+        }
+        
+        .stChatInput textarea {
+            min-height: 52px !important;
         }
     }
     
@@ -712,6 +860,9 @@ if "messages" not in st.session_state:
 if "current_chat_id" not in st.session_state:
     st.session_state.current_chat_id = None
 
+if "auth_mode" not in st.session_state:
+    st.session_state.auth_mode = "signup"  # Default to signup
+
 if "client" not in st.session_state:
     try:
         api_key = st.secrets["GROQ_API_KEY"]
@@ -722,13 +873,17 @@ if "client" not in st.session_state:
 
 # Authentication Screen
 def show_auth_screen():
-    """Display authentication screen"""
-    st.markdown("""
+    """Display authentication screen with sign-up first, then login"""
+    
+    # Determine which mode to show
+    is_signup = st.session_state.auth_mode == "signup"
+    
+    st.markdown(f"""
     <div class="auth-container">
         <div class="auth-card">
             <div class="auth-icon">🧘</div>
-            <h1 class="auth-title">Welcome to Clarity</h1>
-            <p class="auth-subtitle">Your AI-powered wellness companion</p>
+            <h1 class="auth-title">{'Join Clarity' if is_signup else 'Welcome Back'}</h1>
+            <p class="auth-subtitle">{'Start your wellness journey today' if is_signup else 'Continue your wellness journey'}</p>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -736,48 +891,195 @@ def show_auth_screen():
     col1, col2, col3 = st.columns([1, 2, 1])
     
     with col2:
-        # Initialize OAuth component
-        oauth2 = OAuth2Component(
-            st.secrets["oauth"]["client_id"],
-            st.secrets["oauth"]["client_secret"],
-            "https://accounts.google.com/o/oauth2/v2/auth",
-            "https://oauth2.googleapis.com/token",
-            "https://oauth2.googleapis.com/token"
-        )
-        
-        # Create OAuth button
-        result = oauth2.authorize_button(
-            name="Sign in with Google",
-            redirect_uri=st.secrets["oauth"]["redirect_uri"],
-            scope="openid email profile",
-            key="google_oauth",
-            extras_params={"access_type": "offline"},
-            use_container_width=True,
-            pkce='S256',
-        )
-        
-        # Handle OAuth callback
-        if result and "token" in result:
-            headers = {"Authorization": f"Bearer {result['token']['access_token']}"}
-            user_info = requests.get("https://www.googleapis.com/oauth2/v1/userinfo", headers=headers).json()
+        if is_signup:
+            st.markdown("<h3 style='color: #ececf1; text-align: center; margin-bottom: 1.5rem;'>Create Your Account</h3>", unsafe_allow_html=True)
             
-            user_id = user_info.get("id", hashlib.md5(user_info["email"].encode()).hexdigest())
-            
-            st.session_state.user = {
-                'id': user_id,
-                'email': user_info.get("email", ""),
-                'name': user_info.get("name", "User"),
-                'photo_url': user_info.get("picture", f"https://ui-avatars.com/api/?name={user_info.get('name', 'User')}&background=667eea&color=fff")
-            }
-            
-            create_user_in_firestore(
-                user_id,
-                st.session_state.user['email'],
-                st.session_state.user['name'],
-                st.session_state.user['photo_url']
+            # Email input with detailed placeholder
+            email = st.text_input(
+                "Email",
+                placeholder="Enter your email address (e.g., yourname@example.com)",
+                key="signup_email",
+                label_visibility="collapsed"
             )
             
-            st.rerun()
+            # Name input with detailed placeholder
+            name = st.text_input(
+                "Full Name",
+                placeholder="Enter your full name (e.g., John Doe)",
+                key="signup_name",
+                label_visibility="collapsed"
+            )
+            
+            # Password input with detailed placeholder
+            password = st.text_input(
+                "Password",
+                type="password",
+                placeholder="Create a strong password (minimum 8 characters)",
+                key="signup_password",
+                label_visibility="collapsed"
+            )
+            
+            # Sign up button
+            if st.button("Create Account", use_container_width=True, type="primary"):
+                if email and name and password:
+                    if len(password) < 8:
+                        st.error("Password must be at least 8 characters long")
+                    else:
+                        # Simulate account creation and auto-login
+                        user_id = hashlib.md5(email.encode()).hexdigest()
+                        
+                        st.session_state.user = {
+                            'id': user_id,
+                            'email': email,
+                            'name': name,
+                            'photo_url': f"https://ui-avatars.com/api/?name={name.replace(' ', '+')}&background=667eea&color=fff"
+                        }
+                        
+                        create_user_in_firestore(
+                            user_id,
+                            email,
+                            name,
+                            st.session_state.user['photo_url']
+                        )
+                        
+                        st.success("Account created successfully! Redirecting...")
+                        st.rerun()
+                else:
+                    st.error("Please fill in all fields")
+            
+            # Divider
+            st.markdown("<div class='auth-divider'>OR</div>", unsafe_allow_html=True)
+            
+            # Google OAuth
+            oauth2 = OAuth2Component(
+                st.secrets["oauth"]["client_id"],
+                st.secrets["oauth"]["client_secret"],
+                "https://accounts.google.com/o/oauth2/v2/auth",
+                "https://oauth2.googleapis.com/token",
+                "https://oauth2.googleapis.com/token"
+            )
+            
+            result = oauth2.authorize_button(
+                name="Continue with Google",
+                redirect_uri=st.secrets["oauth"]["redirect_uri"],
+                scope="openid email profile",
+                key="google_oauth_signup",
+                extras_params={"access_type": "offline"},
+                use_container_width=True,
+                pkce='S256',
+            )
+            
+            if result and "token" in result:
+                headers = {"Authorization": f"Bearer {result['token']['access_token']}"}
+                user_info = requests.get("https://www.googleapis.com/oauth2/v1/userinfo", headers=headers).json()
+                
+                user_id = user_info.get("id", hashlib.md5(user_info["email"].encode()).hexdigest())
+                
+                st.session_state.user = {
+                    'id': user_id,
+                    'email': user_info.get("email", ""),
+                    'name': user_info.get("name", "User"),
+                    'photo_url': user_info.get("picture", f"https://ui-avatars.com/api/?name={user_info.get('name', 'User')}&background=667eea&color=fff")
+                }
+                
+                create_user_in_firestore(
+                    user_id,
+                    st.session_state.user['email'],
+                    st.session_state.user['name'],
+                    st.session_state.user['photo_url']
+                )
+                
+                st.rerun()
+            
+            # Toggle to login
+            st.markdown(
+                "<div class='auth-toggle'>Already have an account? <a onclick=\"window.location.reload()\">Sign in</a></div>",
+                unsafe_allow_html=True
+            )
+            
+            if st.button("Already have an account? Sign in", use_container_width=True, key="switch_to_login"):
+                st.session_state.auth_mode = "login"
+                st.rerun()
+                
+        else:  # Login mode
+            st.markdown("<h3 style='color: #ececf1; text-align: center; margin-bottom: 1.5rem;'>Sign In</h3>", unsafe_allow_html=True)
+            
+            # Email input
+            login_email = st.text_input(
+                "Email",
+                placeholder="Enter your registered email address",
+                key="login_email",
+                label_visibility="collapsed"
+            )
+            
+            # Password input
+            login_password = st.text_input(
+                "Password",
+                type="password",
+                placeholder="Enter your password",
+                key="login_password",
+                label_visibility="collapsed"
+            )
+            
+            # Login button
+            if st.button("Sign In", use_container_width=True, type="primary"):
+                if login_email and login_password:
+                    # Simulate login (in production, verify credentials)
+                    user_id = hashlib.md5(login_email.encode()).hexdigest()
+                    
+                    st.session_state.user = {
+                        'id': user_id,
+                        'email': login_email,
+                        'name': "User",
+                        'photo_url': f"https://ui-avatars.com/api/?name=User&background=667eea&color=fff"
+                    }
+                    
+                    st.success("Signed in successfully!")
+                    st.rerun()
+                else:
+                    st.error("Please enter your email and password")
+            
+            # Divider
+            st.markdown("<div class='auth-divider'>OR</div>", unsafe_allow_html=True)
+            
+            # Google OAuth
+            oauth2 = OAuth2Component(
+                st.secrets["oauth"]["client_id"],
+                st.secrets["oauth"]["client_secret"],
+                "https://accounts.google.com/o/oauth2/v2/auth",
+                "https://oauth2.googleapis.com/token",
+                "https://oauth2.googleapis.com/token"
+            )
+            
+            result = oauth2.authorize_button(
+                name="Sign in with Google",
+                redirect_uri=st.secrets["oauth"]["redirect_uri"],
+                scope="openid email profile",
+                key="google_oauth_login",
+                extras_params={"access_type": "offline"},
+                use_container_width=True,
+                pkce='S256',
+            )
+            
+            if result and "token" in result:
+                headers = {"Authorization": f"Bearer {result['token']['access_token']}"}
+                user_info = requests.get("https://www.googleapis.com/oauth2/v1/userinfo", headers=headers).json()
+                
+                user_id = user_info.get("id", hashlib.md5(user_info["email"].encode()).hexdigest())
+                
+                st.session_state.user = {
+                    'id': user_id,
+                    'email': user_info.get("email", ""),
+                    'name': user_info.get("name", "User"),
+                    'photo_url': user_info.get("picture", f"https://ui-avatars.com/api/?name={user_info.get('name', 'User')}&background=667eea&color=fff")
+                }
+                
+                st.rerun()
+            
+            # Toggle to signup
+            if st.button("Don't have an account? Sign up", use_container_width=True, key="switch_to_signup"):
+                st.session_state.auth_mode = "signup"
+                st.rerun()
 
 # Main App
 if st.session_state.user is None:
@@ -854,7 +1156,7 @@ else:
                 st.markdown(message["content"])
     
     # Chat Input
-    if prompt := st.chat_input("Send a message..."):
+    if prompt := st.chat_input("Type your message here... Ask about stress, anxiety, sleep, meditation, or share how you're feeling today"):
         st.session_state.messages.append({"role": "user", "content": prompt})
         
         with st.chat_message("user"):
