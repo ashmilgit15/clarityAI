@@ -1117,199 +1117,214 @@ def show_auth_screen():
         }
         .main .block-container {
             padding: 0 !important;
+            max-width: 100% !important;
+        }
+        /* Ensure form elements are visible */
+        .stTextInput, .stButton {
+            position: relative !important;
+            z-index: 1 !important;
         }
     </style>
     """, unsafe_allow_html=True)
     
     is_signup = st.session_state.auth_mode == "signup"
     
-    # Create centered container
-    st.markdown(f"""
-    <div class="auth-container">
-        <div class="auth-card">
+    # Use columns to center the form
+    col1, col2, col3 = st.columns([1, 2, 1])
+    
+    with col2:
+        # Create centered container
+        st.markdown(f"""
+        <div class="auth-card" style="margin: 2rem auto; max-width: 480px;">
             <div class="auth-logo">AuraGlow</div>
             <div class="auth-icon">✨</div>
             <h1 class="auth-title">{'Create Your Account' if is_signup else 'Welcome Back'}</h1>
             <p class="auth-subtitle">
                 {'Start your journey to radiant, healthy skin' if is_signup else 'Sign in to continue your skincare journey'}
             </p>
-    """, unsafe_allow_html=True)
-    
-    if is_signup:
-        # Signup form fields
-        email = st.text_input(
-            "Email Address",
-            placeholder="Enter your email address",
-            key="signup_email",
-            label_visibility="visible"
-        )
+        </div>
+        """, unsafe_allow_html=True)
         
-        name = st.text_input(
-            "Full Name",
-            placeholder="Enter your full name",
-            key="signup_name",
-            label_visibility="visible"
-        )
+        # Form container
+        st.markdown("""
+        <div style="max-width: 480px; margin: 0 auto; padding: 0 2rem;">
+        """, unsafe_allow_html=True)
         
-        password = st.text_input(
-            "Password",
-            type="password",
-            placeholder="Create a strong password (minimum 8 characters)",
-            key="signup_password",
-            label_visibility="visible"
-        )
-        
-        if st.button("Create Account", use_container_width=True, type="primary"):
-            if email and name and password:
-                if len(password) < 8:
-                    st.error("Password must be at least 8 characters long")
+        if is_signup:
+            # Signup form fields
+            email = st.text_input(
+                "Email Address",
+                placeholder="Enter your email address",
+                key="signup_email",
+                label_visibility="visible"
+            )
+            
+            name = st.text_input(
+                "Full Name",
+                placeholder="Enter your full name",
+                key="signup_name",
+                label_visibility="visible"
+            )
+            
+            password = st.text_input(
+                "Password",
+                type="password",
+                placeholder="Create a strong password (minimum 8 characters)",
+                key="signup_password",
+                label_visibility="visible"
+            )
+            
+            if st.button("Create Account", use_container_width=True, type="primary"):
+                if email and name and password:
+                    if len(password) < 8:
+                        st.error("Password must be at least 8 characters long")
+                    else:
+                        user_id = hashlib.md5(email.encode()).hexdigest()
+                        
+                        st.session_state.user = {
+                            'id': user_id,
+                            'email': email,
+                            'name': name,
+                            'photo_url': f"https://ui-avatars.com/api/?name={name.replace(' ', '+')}&background=D4AF37&color=fff"
+                        }
+                        
+                        create_user_in_firestore(
+                            user_id,
+                            email,
+                            name,
+                            st.session_state.user['photo_url']
+                        )
+                        
+                        st.success("Account created successfully! Redirecting...")
+                        st.rerun()
                 else:
-                    user_id = hashlib.md5(email.encode()).hexdigest()
+                    st.error("Please fill in all fields")
+            
+            st.markdown("<div class='auth-divider'>OR</div>", unsafe_allow_html=True)
+            
+            try:
+                oauth2 = OAuth2Component(
+                    st.secrets["oauth"]["client_id"],
+                    st.secrets["oauth"]["client_secret"],
+                    "https://accounts.google.com/o/oauth2/v2/auth",
+                    "https://oauth2.googleapis.com/token",
+                    "https://oauth2.googleapis.com/token"
+                )
+                
+                result = oauth2.authorize_button(
+                    name="Continue with Google",
+                    redirect_uri=st.secrets["oauth"]["redirect_uri"],
+                    scope="openid email profile",
+                    key="google_oauth_signup",
+                    extras_params={"access_type": "offline"},
+                    use_container_width=True,
+                    pkce='S256',
+                )
+                
+                if result and "token" in result:
+                    headers = {"Authorization": f"Bearer {result['token']['access_token']}"}
+                    user_info = requests.get("https://www.googleapis.com/oauth2/v1/userinfo", headers=headers).json()
+                    
+                    user_id = user_info.get("id", hashlib.md5(user_info["email"].encode()).hexdigest())
                     
                     st.session_state.user = {
                         'id': user_id,
-                        'email': email,
-                        'name': name,
-                        'photo_url': f"https://ui-avatars.com/api/?name={name.replace(' ', '+')}&background=D4AF37&color=fff"
+                        'email': user_info.get("email", ""),
+                        'name': user_info.get("name", "User"),
+                        'photo_url': user_info.get("picture", f"https://ui-avatars.com/api/?name={user_info.get('name', 'User')}&background=D4AF37&color=fff")
                     }
                     
                     create_user_in_firestore(
                         user_id,
-                        email,
-                        name,
+                        st.session_state.user['email'],
+                        st.session_state.user['name'],
                         st.session_state.user['photo_url']
                     )
                     
-                    st.success("Account created successfully! Redirecting...")
                     st.rerun()
-            else:
-                st.error("Please fill in all fields")
-        
-        st.markdown("<div class='auth-divider'>OR</div>", unsafe_allow_html=True)
-        
-        try:
-            oauth2 = OAuth2Component(
-                st.secrets["oauth"]["client_id"],
-                st.secrets["oauth"]["client_secret"],
-                "https://accounts.google.com/o/oauth2/v2/auth",
-                "https://oauth2.googleapis.com/token",
-                "https://oauth2.googleapis.com/token"
+            except Exception as e:
+                st.warning(f"OAuth not configured: {str(e)}")
+            
+            if st.button("Already have an account? Sign in", use_container_width=True, key="switch_to_login"):
+                st.session_state.auth_mode = "login"
+                st.rerun()
+                
+        else:  # Login mode
+            # Login form fields
+            login_email = st.text_input(
+                "Email Address",
+                placeholder="Enter your registered email address",
+                key="login_email",
+                label_visibility="visible"
             )
             
-            result = oauth2.authorize_button(
-                name="Continue with Google",
-                redirect_uri=st.secrets["oauth"]["redirect_uri"],
-                scope="openid email profile",
-                key="google_oauth_signup",
-                extras_params={"access_type": "offline"},
-                use_container_width=True,
-                pkce='S256',
+            login_password = st.text_input(
+                "Password",
+                type="password",
+                placeholder="Enter your password",
+                key="login_password",
+                label_visibility="visible"
             )
             
-            if result and "token" in result:
-                headers = {"Authorization": f"Bearer {result['token']['access_token']}"}
-                user_info = requests.get("https://www.googleapis.com/oauth2/v1/userinfo", headers=headers).json()
-                
-                user_id = user_info.get("id", hashlib.md5(user_info["email"].encode()).hexdigest())
-                
-                st.session_state.user = {
-                    'id': user_id,
-                    'email': user_info.get("email", ""),
-                    'name': user_info.get("name", "User"),
-                    'photo_url': user_info.get("picture", f"https://ui-avatars.com/api/?name={user_info.get('name', 'User')}&background=D4AF37&color=fff")
-                }
-                
-                create_user_in_firestore(
-                    user_id,
-                    st.session_state.user['email'],
-                    st.session_state.user['name'],
-                    st.session_state.user['photo_url']
+            if st.button("Sign In", use_container_width=True, type="primary"):
+                if login_email and login_password:
+                    user_id = hashlib.md5(login_email.encode()).hexdigest()
+                    
+                    st.session_state.user = {
+                        'id': user_id,
+                        'email': login_email,
+                        'name': "User",
+                        'photo_url': f"https://ui-avatars.com/api/?name=User&background=D4AF37&color=fff"
+                    }
+                    
+                    st.success("Signed in successfully!")
+                    st.rerun()
+                else:
+                    st.error("Please enter your email and password")
+            
+            st.markdown("<div class='auth-divider'>OR</div>", unsafe_allow_html=True)
+            
+            try:
+                oauth2 = OAuth2Component(
+                    st.secrets["oauth"]["client_id"],
+                    st.secrets["oauth"]["client_secret"],
+                    "https://accounts.google.com/o/oauth2/v2/auth",
+                    "https://oauth2.googleapis.com/token",
+                    "https://oauth2.googleapis.com/token"
                 )
                 
-                st.rerun()
-        except Exception as e:
-            st.warning(f"OAuth not configured: {str(e)}")
-        
-        if st.button("Already have an account? Sign in", use_container_width=True, key="switch_to_login"):
-            st.session_state.auth_mode = "login"
-            st.rerun()
+                result = oauth2.authorize_button(
+                    name="Sign in with Google",
+                    redirect_uri=st.secrets["oauth"]["redirect_uri"],
+                    scope="openid email profile",
+                    key="google_oauth_login",
+                    extras_params={"access_type": "offline"},
+                    use_container_width=True,
+                    pkce='S256',
+                )
+                
+                if result and "token" in result:
+                    headers = {"Authorization": f"Bearer {result['token']['access_token']}"}
+                    user_info = requests.get("https://www.googleapis.com/oauth2/v1/userinfo", headers=headers).json()
+                    
+                    user_id = user_info.get("id", hashlib.md5(user_info["email"].encode()).hexdigest())
+                    
+                    st.session_state.user = {
+                        'id': user_id,
+                        'email': user_info.get("email", ""),
+                        'name': user_info.get("name", "User"),
+                        'photo_url': user_info.get("picture", f"https://ui-avatars.com/api/?name={user_info.get('name', 'User')}&background=D4AF37&color=fff")
+                    }
+                    
+                    st.rerun()
+            except Exception as e:
+                st.warning(f"OAuth not configured: {str(e)}")
             
-    else:  # Login mode
-        # Login form fields
-        login_email = st.text_input(
-            "Email Address",
-            placeholder="Enter your registered email address",
-            key="login_email",
-            label_visibility="visible"
-        )
-        
-        login_password = st.text_input(
-            "Password",
-            type="password",
-            placeholder="Enter your password",
-            key="login_password",
-            label_visibility="visible"
-        )
-        
-        if st.button("Sign In", use_container_width=True, type="primary"):
-            if login_email and login_password:
-                user_id = hashlib.md5(login_email.encode()).hexdigest()
-                
-                st.session_state.user = {
-                    'id': user_id,
-                    'email': login_email,
-                    'name': "User",
-                    'photo_url': f"https://ui-avatars.com/api/?name=User&background=D4AF37&color=fff"
-                }
-                
-                st.success("Signed in successfully!")
+            if st.button("Don't have an account? Sign up", use_container_width=True, key="switch_to_signup"):
+                st.session_state.auth_mode = "signup"
                 st.rerun()
-            else:
-                st.error("Please enter your email and password")
         
-        st.markdown("<div class='auth-divider'>OR</div>", unsafe_allow_html=True)
-        
-        try:
-            oauth2 = OAuth2Component(
-                st.secrets["oauth"]["client_id"],
-                st.secrets["oauth"]["client_secret"],
-                "https://accounts.google.com/o/oauth2/v2/auth",
-                "https://oauth2.googleapis.com/token",
-                "https://oauth2.googleapis.com/token"
-            )
-            
-            result = oauth2.authorize_button(
-                name="Sign in with Google",
-                redirect_uri=st.secrets["oauth"]["redirect_uri"],
-                scope="openid email profile",
-                key="google_oauth_login",
-                extras_params={"access_type": "offline"},
-                use_container_width=True,
-                pkce='S256',
-            )
-            
-            if result and "token" in result:
-                headers = {"Authorization": f"Bearer {result['token']['access_token']}"}
-                user_info = requests.get("https://www.googleapis.com/oauth2/v1/userinfo", headers=headers).json()
-                
-                user_id = user_info.get("id", hashlib.md5(user_info["email"].encode()).hexdigest())
-                
-                st.session_state.user = {
-                    'id': user_id,
-                    'email': user_info.get("email", ""),
-                    'name': user_info.get("name", "User"),
-                    'photo_url': user_info.get("picture", f"https://ui-avatars.com/api/?name={user_info.get('name', 'User')}&background=D4AF37&color=fff")
-                }
-                
-                st.rerun()
-        except Exception as e:
-            st.warning(f"OAuth not configured: {str(e)}")
-        
-        if st.button("Don't have an account? Sign up", use_container_width=True, key="switch_to_signup"):
-            st.session_state.auth_mode = "signup"
-            st.rerun()
-    
-    st.markdown("</div></div>", unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
 
 # ==========================================
 # MAIN APPLICATION
