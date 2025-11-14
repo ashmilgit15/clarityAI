@@ -18,7 +18,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Initialize Firebase (only once)
+# Initialize Firebase (only once) - FIXED
 if not firebase_admin._apps:
     try:
         if "firebase_credentials" in st.secrets:
@@ -26,7 +26,7 @@ if not firebase_admin._apps:
                 "type": st.secrets["firebase_credentials"]["type"],
                 "project_id": st.secrets["firebase_credentials"]["project_id"],
                 "private_key_id": st.secrets["firebase_credentials"]["private_key_id"],
-                "private_key": st.secrets["firebase_credentials"]["private_key"],
+                "private_key": st.secrets["firebase_credentials"]["private_key"].replace('\\n', '\n'),
                 "client_email": st.secrets["firebase_credentials"]["client_email"],
                 "client_id": st.secrets["firebase_credentials"]["client_id"],
                 "auth_uri": st.secrets["firebase_credentials"]["auth_uri"],
@@ -37,18 +37,23 @@ if not firebase_admin._apps:
             if "universe_domain" in st.secrets["firebase_credentials"]:
                 cred_dict["universe_domain"] = st.secrets["firebase_credentials"]["universe_domain"]
             cred = credentials.Certificate(cred_dict)
+            firebase_admin.initialize_app(cred)
+            db = firestore.client()
+        elif os.path.exists("firebase-credentials.json"):
+            cred = credentials.Certificate("firebase-credentials.json")
+            firebase_admin.initialize_app(cred)
+            db = firestore.client()
         else:
-            cred_path = st.secrets.get("firebase_credentials_path", "firebase-credentials.json")
-            cred = credentials.Certificate(cred_path)
-        
-        firebase_admin.initialize_app(cred)
-        db = firestore.client()
+            st.warning("⚠️ Firebase credentials not found. Some features may be limited.")
+            db = None
     except Exception as e:
-        st.error(f"Firebase initialization error: {str(e)}")
-        st.info("Please complete Firebase setup. See FIREBASE_SETUP.md")
-        st.stop()
+        st.warning(f"⚠️ Firebase initialization issue: {str(e)}. App will continue with limited features.")
+        db = None
 else:
-    db = firestore.client()
+    try:
+        db = firestore.client()
+    except:
+        db = None
 
 # Professional ChatGPT-Style UI
 st.markdown("""
@@ -847,53 +852,72 @@ SYSTEM_PROMPT = """You are 'Clarity', an expert AI Wellness Companion designed t
 # Helper Functions
 def create_user_in_firestore(user_id, email, name, photo_url):
     """Create user document in Firestore"""
-    user_ref = db.collection('users').document(user_id)
-    user_ref.set({
-        'email': email,
-        'name': name,
-        'photo_url': photo_url,
-        'created_at': firestore.SERVER_TIMESTAMP,
-        'last_login': firestore.SERVER_TIMESTAMP
-    }, merge=True)
+    if db is None:
+        return
+    try:
+        user_ref = db.collection('users').document(user_id)
+        user_ref.set({
+            'email': email,
+            'name': name,
+            'photo_url': photo_url,
+            'created_at': firestore.SERVER_TIMESTAMP,
+            'last_login': firestore.SERVER_TIMESTAMP
+        }, merge=True)
+    except Exception as e:
+        st.warning(f"Could not save user data: {str(e)}")
 
 def save_chat_to_firestore(user_id, messages):
     """Save chat session to Firestore"""
-    if not messages:
-        return
-    
-    chat_ref = db.collection('users').document(user_id).collection('chats').document()
-    chat_ref.set({
-        'messages': messages,
-        'created_at': firestore.SERVER_TIMESTAMP,
-        'updated_at': firestore.SERVER_TIMESTAMP,
-        'message_count': len(messages)
-    })
-    return chat_ref.id
+    if db is None or not messages:
+        return None
+    try:
+        chat_ref = db.collection('users').document(user_id).collection('chats').document()
+        chat_ref.set({
+            'messages': messages,
+            'created_at': firestore.SERVER_TIMESTAMP,
+            'updated_at': firestore.SERVER_TIMESTAMP,
+            'message_count': len(messages)
+        })
+        return chat_ref.id
+    except Exception as e:
+        st.warning(f"Could not save chat: {str(e)}")
+        return None
 
 def load_user_chats(user_id, limit=10):
     """Load user's recent chats from Firestore"""
-    chats_ref = db.collection('users').document(user_id).collection('chats')
-    chats = chats_ref.order_by('updated_at', direction=firestore.Query.DESCENDING).limit(limit).stream()
-    
-    chat_list = []
-    for chat in chats:
-        chat_data = chat.to_dict()
-        chat_list.append({
-            'id': chat.id,
-            'messages': chat_data.get('messages', []),
-            'created_at': chat_data.get('created_at'),
-            'preview': chat_data['messages'][0]['content'][:50] + "..." if chat_data.get('messages') else "Empty chat"
-        })
-    return chat_list
+    if db is None:
+        return []
+    try:
+        chats_ref = db.collection('users').document(user_id).collection('chats')
+        chats = chats_ref.order_by('updated_at', direction=firestore.Query.DESCENDING).limit(limit).stream()
+        
+        chat_list = []
+        for chat in chats:
+            chat_data = chat.to_dict()
+            chat_list.append({
+                'id': chat.id,
+                'messages': chat_data.get('messages', []),
+                'created_at': chat_data.get('created_at'),
+                'preview': chat_data['messages'][0]['content'][:50] + "..." if chat_data.get('messages') else "Empty chat"
+            })
+        return chat_list
+    except Exception as e:
+        st.warning(f"Could not load chats: {str(e)}")
+        return []
 
 def update_chat_in_firestore(user_id, chat_id, messages):
     """Update existing chat session"""
-    chat_ref = db.collection('users').document(user_id).collection('chats').document(chat_id)
-    chat_ref.update({
-        'messages': messages,
-        'updated_at': firestore.SERVER_TIMESTAMP,
-        'message_count': len(messages)
-    })
+    if db is None:
+        return
+    try:
+        chat_ref = db.collection('users').document(user_id).collection('chats').document(chat_id)
+        chat_ref.update({
+            'messages': messages,
+            'updated_at': firestore.SERVER_TIMESTAMP,
+            'message_count': len(messages)
+        })
+    except Exception as e:
+        st.warning(f"Could not update chat: {str(e)}")
 
 # Initialize session state
 if "user" not in st.session_state:
