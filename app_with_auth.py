@@ -861,7 +861,7 @@ if "current_chat_id" not in st.session_state:
     st.session_state.current_chat_id = None
 
 if "auth_mode" not in st.session_state:
-    st.session_state.auth_mode = "login"  # Default to login
+    st.session_state.auth_mode = "signup"  # Default to signup
 
 if "client" not in st.session_state:
     try:
