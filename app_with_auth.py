@@ -411,7 +411,85 @@ st.markdown("""
         color: #8e8ea0;
     }
     
-    /* Auth Buttons */
+    /* Streamlit Text Inputs in Auth Screen */
+    .stTextInput input {
+        background: rgba(64, 65, 79, 0.6) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: 10px !important;
+        color: #ececf1 !important;
+        font-size: 1rem !important;
+        padding: 0.875rem 1rem !important;
+        min-height: 48px !important;
+        transition: all 0.2s ease !important;
+    }
+    
+    .stTextInput input:focus {
+        outline: none !important;
+        border-color: rgba(102, 126, 234, 0.5) !important;
+        background: rgba(64, 65, 79, 0.8) !important;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+    }
+    
+    .stTextInput input::placeholder {
+        color: #8e8ea0 !important;
+    }
+    
+    /* Input Help Text Expander */
+    .input-help-box {
+        background: rgba(102, 126, 234, 0.1);
+        border-left: 3px solid #667eea;
+        padding: 1rem;
+        margin: 0.5rem 0 1rem 0;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        line-height: 1.6;
+        color: #b4b4b4;
+    }
+    
+    .input-help-box h4 {
+        color: #ececf1;
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 0 0 0.75rem 0;
+    }
+    
+    .input-help-box p {
+        margin: 0.5rem 0;
+    }
+    
+    .input-help-box ul {
+        margin: 0.5rem 0;
+        padding-left: 1.5rem;
+    }
+    
+    .input-help-box li {
+        margin: 0.25rem 0;
+    }
+    
+    /* Expander Styling for Auth Screen */
+    .streamlit-expanderHeader {
+        background: rgba(102, 126, 234, 0.08) !important;
+        border: 1px solid rgba(102, 126, 234, 0.2) !important;
+        border-radius: 8px !important;
+        color: #667eea !important;
+        font-size: 0.875rem !important;
+        font-weight: 500 !important;
+        padding: 0.625rem 1rem !important;
+        transition: all 0.2s ease !important;
+    }
+    
+    .streamlit-expanderHeader:hover {
+        background: rgba(102, 126, 234, 0.15) !important;
+        border-color: rgba(102, 126, 234, 0.4) !important;
+    }
+    
+    .streamlit-expanderContent {
+        border: 1px solid rgba(102, 126, 234, 0.2) !important;
+        border-top: none !important;
+        background: transparent !important;
+        border-radius: 0 0 8px 8px !important;
+        padding: 0 !important;
+    }
     .auth-btn {
         width: 100%;
         padding: 0.875rem 1.5rem;
@@ -892,23 +970,74 @@ def show_auth_screen():
     
     with col2:
         if is_signup:
-            st.markdown("<h3 style='color: #ececf1; text-align: center; margin-bottom: 1.5rem;'>Create Your Account</h3>", unsafe_allow_html=True)
+            st.markdown("<h3 style='color: #ececf1; text-align: center; margin-bottom: 1.5rem; font-weight: 600;'>Create Your Account</h3>", unsafe_allow_html=True)
             
             # Email input with detailed placeholder
             email = st.text_input(
-                "Email",
-                placeholder="Enter your email address (e.g., yourname@example.com)",
+                "Email Address",
+                placeholder="Enter your email (e.g., yourname@example.com)",
                 key="signup_email",
-                label_visibility="collapsed"
+                help="Click to see best practices for email entry"
             )
+            
+            # Email optimization guide - expandable
+            with st.expander("💡 Optimize Email Input - Best Practices", expanded=False):
+                st.markdown("""
+                <div class="input-help-box">
+                    <h4>Email Address Best Practices & Security</h4>
+                    <p><strong>Why we need your email:</strong> Your email serves as your unique identifier and primary communication channel. It allows you to recover your account, receive important updates about your wellness journey, and ensures your data remains secure and accessible only to you.</p>
+                    
+                    <p><strong>Email Format Guidelines:</strong></p>
+                    <ul>
+                        <li>Use a valid, active email address you check regularly</li>
+                        <li>Ensure proper format: username@domain.com</li>
+                        <li>Avoid temporary or disposable email services for account longevity</li>
+                        <li>Double-check for typos before submitting to prevent access issues</li>
+                    </ul>
+                    
+                    <p><strong>Privacy & Security Considerations:</strong> We take your privacy seriously. Your email is encrypted and stored securely. We never share your email with third parties without explicit consent. You'll only receive essential communications related to your account and wellness activities. All data transmission occurs over secure HTTPS connections, and we implement industry-standard encryption protocols to protect your personal information.</p>
+                    
+                    <p><strong>Professional Recommendations:</strong> Consider using a dedicated email for wellness and health applications to keep your personal development journey organized. This helps you track all your wellness-related communications in one place and maintains separation between different aspects of your digital life.</p>
+                    
+                    <p><strong>Common Issues to Avoid:</strong> Don't use spaces, special characters beyond standard symbols, or multiple @ symbols. Ensure your email provider supports modern security features like two-factor authentication for added protection of your wellness data and personal information.</p>
+                </div>
+                """, unsafe_allow_html=True)
+            
+            st.markdown("<div style='margin-bottom: 0.5rem;'></div>", unsafe_allow_html=True)
             
             # Name input with detailed placeholder
             name = st.text_input(
                 "Full Name",
                 placeholder="Enter your full name (e.g., John Doe)",
                 key="signup_name",
-                label_visibility="collapsed"
+                help="Click to see privacy considerations for your name"
             )
+            
+            # Name optimization guide - expandable
+            with st.expander("💡 Optimize Name Input - Privacy & Personalization", expanded=False):
+                st.markdown("""
+                <div class="input-help-box">
+                    <h4>Full Name Privacy & Personalization Guidelines</h4>
+                    <p><strong>Why we ask for your name:</strong> Your name helps us personalize your wellness experience, making interactions feel more natural and supportive. When Clarity addresses you by name, it creates a more empathetic and human-centered experience that enhances the emotional support we provide on your wellness journey.</p>
+                    
+                    <p><strong>Name Entry Best Practices:</strong></p>
+                    <ul>
+                        <li>Enter the name you prefer to be called in conversation</li>
+                        <li>You can use your full legal name or a preferred nickname</li>
+                        <li>First name and last name provide the most natural interaction</li>
+                        <li>Special characters and numbers are supported if part of your name</li>
+                        <li>Consider how you want the AI to address you in supportive conversations</li>
+                    </ul>
+                    
+                    <p><strong>Privacy Protection:</strong> Your name is stored securely and used solely within the Clarity platform. We never sell or share your personal information. You can update your display name at any time in your account settings. The name you provide is only visible to you and is used to enhance your personalized wellness experience.</p>
+                    
+                    <p><strong>Cultural Sensitivity:</strong> We respect all naming conventions worldwide. Whether you have a single name, multiple given names, or culturally specific naming structures, our platform accommodates diverse naming traditions. Enter your name in the format that feels most comfortable and authentic to you.</p>
+                    
+                    <p><strong>Professional Tip:</strong> Using your real name helps build a genuine connection with the AI wellness companion, but if privacy is a concern, you're welcome to use a pseudonym or nickname. The quality of support remains the same regardless of whether you use your legal name or a chosen identifier.</p>
+                </div>
+                """, unsafe_allow_html=True)
+            
+            st.markdown("<div style='margin-bottom: 0.5rem;'></div>", unsafe_allow_html=True)
             
             # Password input with detailed placeholder
             password = st.text_input(
@@ -916,8 +1045,34 @@ def show_auth_screen():
                 type="password",
                 placeholder="Create a strong password (minimum 8 characters)",
                 key="signup_password",
-                label_visibility="collapsed"
+                help="Click to see security recommendations"
             )
+            
+            # Password optimization guide - expandable
+            with st.expander("💡 Optimize Password Input - Security Essentials", expanded=False):
+                st.markdown("""
+                <div class="input-help-box">
+                    <h4>Password Security Best Practices & Requirements</h4>
+                    <p><strong>Why password security matters:</strong> Your password is the primary defense protecting your personal wellness data, conversation history, and private reflections. A strong password ensures that only you can access your emotional support sessions and sensitive health information shared with Clarity.</p>
+                    
+                    <p><strong>Strong Password Requirements:</strong></p>
+                    <ul>
+                        <li><strong>Minimum 8 characters</strong> - Longer passwords are exponentially more secure</li>
+                        <li><strong>Mix character types:</strong> Combine uppercase letters, lowercase letters, numbers, and symbols</li>
+                        <li><strong>Avoid common patterns:</strong> Don't use "password123", "qwerty", or sequential numbers</li>
+                        <li><strong>No personal info:</strong> Avoid using your name, birthday, or easily discoverable information</li>
+                        <li><strong>Unique password:</strong> Never reuse passwords from other accounts</li>
+                    </ul>
+                    
+                    <p><strong>Password Creation Tips:</strong> Consider using a passphrase - a sequence of random words (e.g., "BlueSky!Morning&Coffee77"). This method creates memorable yet highly secure passwords. Alternatively, use a reputable password manager to generate and store complex passwords securely.</p>
+                    
+                    <p><strong>Security Measures We Implement:</strong> Your password is never stored in plain text. We use industry-standard bcrypt hashing with salt, making it computationally infeasible to reverse-engineer your password even if our database were compromised. All authentication occurs over encrypted HTTPS connections, and we monitor for suspicious login attempts to protect your account.</p>
+                    
+                    <p><strong>Account Recovery:</strong> If you forget your password, you can reset it using your registered email address. We'll send a secure, time-limited reset link that allows you to create a new password. For maximum security, reset links expire after 24 hours and can only be used once.</p>
+                    
+                    <p><strong>Professional Security Advice:</strong> Enable two-factor authentication when available, regularly update your password every 3-6 months, and never share your credentials with anyone. Be cautious of phishing attempts requesting your password via email or messages - legitimate services never ask for passwords through these channels.</p>
+                </div>
+                """, unsafe_allow_html=True)
             
             # Sign up button
             if st.button("Create Account", use_container_width=True, type="primary"):
